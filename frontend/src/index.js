@@ -14,7 +14,6 @@ class Screen extends React.Component{
     //Add the hook to the server here to check client/server comms
     handleClick(){
         alert('Clicked');
-
         //this will create an async request to the server
         //when activating this, the handleClick() must be changed to async handleClick()
         //update the endpoint variable above when the server endpoint is secured
