@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import App from './App';
 
-//this is temporary and will need to get updated
+/* //this is temporary and will need to get updated
 let endpoint = 'https://localhost:5000/'
 
 var buttonStyle = {
@@ -23,7 +24,7 @@ class Screen extends React.Component{
         let result = await response.json()
         console.log(response);
         alert(result.item[0].data);
-        */
+        
     }
 
     render(){
@@ -36,12 +37,12 @@ class Screen extends React.Component{
     }
 }
 
-
+ */
 
 
 // ========================================
 
 ReactDOM.render(
-<Screen />,
+<App />,
 document.getElementById('root')
 )
