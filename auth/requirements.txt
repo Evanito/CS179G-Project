@@ -1,0 +1,5 @@
+authlib==0.11                   # Original file taken from Matt Button's site:  #
+flask==1.0.2                    #                                               # 
+google-api-python-client        # https://www.mattbutton.com/2019/01/05/        #
+google-auth                     # google-authentication-with-python-and-flask/  #
+virtualenv                      #                                               #
