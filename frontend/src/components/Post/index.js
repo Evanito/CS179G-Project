@@ -1,20 +1,15 @@
 import "./Post.css"
 import React, { Component, useRef } from "react";
-import {Query} from "react-apollo";
-import gql from "graphql-tag"
 import av from '../../Images/avatar.png';
-import sp from '../../Images/sample.png';
-import { render } from "@testing-library/react";
 const avatar = av;
 //const image = sp;
 const caption = "caption";
-let result = []
 let serverName = "http://evpi.nsupdate.info:14200/";
 
 function getName(){
-    let endpoint = 'user?'
-    return fetch(serverName + endpoint + 'id=696969').then((response) => response.json())
-    .then(data => data.data[0].username)
+    return fetch(serverName + 'user?id=1234')
+            .then((response) => response.json())
+            .then(data => data.data[0].username)
 }
 
 function getImage(){
@@ -34,6 +29,8 @@ class Post extends React.Component {
         this.state = {
             name: null,
             image: null,
+            userid: null,
+            caption: null,
         };
         getAll()
             .then(([username, userImage]) => {
@@ -44,19 +41,6 @@ class Post extends React.Component {
             })
     }
     render(){
-        /* async function getPosts() {   
-            let url = new URL(serverName);
-            let params = {
-                'id':696969,
-            }
-            url.search = new URLSearchParams(params).toString();
-            let response = fetch(url)
-            .then(response => response.json())
-            .then(data => result = data)
-            console.log("response ",response)
-            console.log("result ",result)
-            console.log("DATA ",result)
-        } */
         return(
             <article className="Post" ref="Post">
                 <header>

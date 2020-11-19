@@ -26,6 +26,13 @@ i.Nav{
     background-repeat: no-repeat;
     height: 50px;
     width: 172px;
-    
-
+}
+.Nav-upload{
+    display: block;
+    background-position: 0px 0px;
+    background-image: url(../../Images/upload--v1.png);
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
 }
