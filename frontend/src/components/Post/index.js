@@ -13,8 +13,8 @@ function getName(){
 }
 
 function getImage(){
-    let endpoint = 'image?'
-    return fetch(serverName + endpoint + 'id=696969').then((response) => response.blob())
+    let endpoint = 'image/'
+    return fetch(serverName + endpoint + '696969').then((response) => response.blob())
     .then(data => data)
 }
 
