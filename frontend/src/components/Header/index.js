@@ -9,7 +9,7 @@ class Header extends React.Component{
                     <div className="Nav-brand">
                         <a className="Nav-brand-logo" href="/">
                         </a>
-                        <a className="Nav-upload" href="/" /* onClick={} */></a>
+                        <a className="Nav-upload" href="/" onClick= {this.props.onClick}></a>
                     </div>
                 </div>
             </nav>

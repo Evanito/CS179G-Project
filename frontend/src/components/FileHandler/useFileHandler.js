@@ -1,8 +1,8 @@
-import React from 'react'
-import {useCallBack, useEffect, useReducer, useRef} from 'react'
+import {useCallback, useEffect, useReducer, useRef} from 'react'
 
 const api = {
     uploadFile({ timeout = 550 }) {
+        console.log("file upload function")
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve()
@@ -60,10 +60,26 @@ const reducer = (state, action) =>{
     }
 }
 
-
 const useFileHandlers = () => {
-    const [state, dispatch] = useReducer(reducer, initialState)
-    const onChange= (e) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    
+    const onSubmit = useCallback(
+        (e) => {
+            e.preventDefault()
+            console.log("File size: ", state.files.lenght)
+            if(state.files.lenght){
+                dispatch({type: 'submit'})
+            }
+            else{
+                window.alert("No files uploaded")
+            }
+        },
+        [state.files.lenght],
+    );
+
+    const onChange = (e) => {
+        //e.persist()
+        console.log("onchange: ". e)
         if(e.target.files.lenght){
             const arrFiles= Array.from(e.target.files)
             const files = arrFiles.map((file,index) => {
@@ -73,18 +89,7 @@ const useFileHandlers = () => {
             dispatch({type:'load', files})
         }
     }
-    const onSubmit= useCallBack(
-        (e) => {
-            e.preventDefault()
-            if(state.files.lenght){
-                dispatch({type: 'submit'})
-            }
-            else{
-                window.alert("No files uploaded")
-            }
-        },
-        [state.files.lenght],
-    )
+    // Sets the next file when it detects that its ready to go
     useEffect(() => {
         if (state.pending.length && state.next == null) {
           const next = state.pending[0]
@@ -112,29 +117,14 @@ const useFileHandlers = () => {
                 })
         }
     }, [state])
-    useEffect(() => {
-        if(state.pending.lenght && state.next){
-            const{next} = state
-            api
-            .uploadFile(next)
-            .then(() => {
-                const prev = next
-                logUploadedFile(++countRef.current)
-                const pending = state.pending.slice(1)
-                dispatch({type:'file uplaoded', prev, pending})
-            })
-            .catch((eror) => {
-                console.error(eror)
-                dispatch({type:'set-upload-error', error})
-            })
-        }
-    },[state])
+
     // Ends the upload process
     useEffect(() => {
         if (!state.pending.length && state.uploading) {
         dispatch({ type: 'files-uploaded' })
         }
     }, [state.pending.length, state.uploading])
+    
     return {
         ...state,
         onSubmit,
