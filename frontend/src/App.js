@@ -23,67 +23,70 @@ const Input = (props) => (
   />
 )
 
-const App = () =>{
-  const {
-    files,
-    pending,
-    next,
-    uploading,
-    uploaded,
-    status,
-    onSubmit,
-    onChange,
-  } = useFileHandlers()
+class App extends Component {
 
-  const [upload, setUpload] = useState(true)
+  state = {
+    targetFile: null,
+    upload: false,
+    preview: null,
+  };
 
-  const handleClick = (a) => {
+  handleClick = (a) => {
     console.log("upload button:",a)
-    setUpload(a)
+    this.setState({upload: true})
   }
 
-  return (
+  onFileChange = event =>{
+    console.log("on change", event.target.files)
+    this.setState({targetFile: event.target.files[0]})
+    const objUrl = URL.createObjectURL(event.target.files[0])
+    this.setState({preview: objUrl})
+  }
+
+  onFileUpload = () => {
+    if(this.state.targetFile){
+      const form = new FormData()
+      form.append(
+        "file",
+        this.state.targetFile,
+        this.state.targetFile.name,
+      );
+      this.setState({upload:false})
+      console.log("state",this.state.targetFile)
+      console.log("form", form);}
+      //DO POST REQUEST HERE
+
+  }
+
+  FileData = () => {
+    if(this.state.targetFile && this.state.upload){
+      return(
+        <div className="thumbnail-wrapper">
+          <img className="thumbnail"src={this.state.preview}/>
+        </div>)
+    }
+  }
+
+  render() {
+    console.log(this.state.upload)
+    return (
     <ApolloProvider client={client}>
       <div className="App">
-        <Header onClick={() => handleClick(true)}/>
+        <Header/>
+        <button  onClick={() =>  this.handleClick(true)}>Upload</button>
         <section className="App-Feed">
           <Post/>
         </section>
-          {upload === true && ( 
-            <div className="container">
-              <form className="form" onSubmit={onSubmit}>
-                {status === 'FILES_UPLOADED' && (
-                  <div className="success-container">
-                    <div>
-                      <h2>Congratulations!</h2>
-                      <small>You uploaded your files. Get some rest.</small>
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <Input onChange={onChange} />
-                  <button type="submit">Submit</button>
-                </div>
-                <div>
-                  {files.map(({ file, src, id }, index) => (
-                    <div
-                    style={{
-                      opacity: uploaded[id] ? 0.2 : 1,
-                    }}
-                    key={`thumb${index}`}
-                    className="thumbnail-wrapper"
-                    >
-                      <img className="thumbnail" src={src} alt="" />
-                      <div className="thumbnail-caption">{file.name}</div>
-                    </div>
-                  ))}
-                </div>
-              </form>
-            </div>
+          {this.state.upload === true && ( 
+              <div className="container">
+                <Input onChange={this.onFileChange} />
+                <button onClick={this.onFileUpload}>Submit</button>
+              </div>
           )}
+          {this.FileData()}
       </div>
     </ApolloProvider>
-  );
+  );}
 } 
 
 export default App;
