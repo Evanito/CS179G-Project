@@ -3,7 +3,7 @@ const Input = (props) => (
     <input
       type="file"
       accept=".jpg,.png"
-      name="img-loader-input"
+      name="image"
       multiple
       {...props}
     />
@@ -12,12 +12,17 @@ export default class Upload extends React.Component{
     state = {
         preview: null,
         targetFile: null,
+        caption: null,
     }
     onFileChange = event =>{
-        console.log("on change", event.target.files)
+        console.log("on change", event.target.name)
         this.setState({targetFile: event.target.files[0]})
         const objUrl = URL.createObjectURL(event.target.files[0])
         this.setState({preview: objUrl})
+    }
+    onTextChange = event =>{
+        console.log("on change", event.target.value)
+        this.setState({caption: event.target.value})
     }
 
     onFileUpload = () => {
@@ -30,7 +35,7 @@ export default class Upload extends React.Component{
             );
             this.setState({upload:false})
             console.log("state",this.state.targetFile)
-            console.log("form", form);}
+            console.log("caption", this.state.caption);}
             //DO POST REQUEST HERE
             this.setState({preview:null})
             this.setState({targetFile:null})
@@ -40,6 +45,7 @@ export default class Upload extends React.Component{
         <div id="overlay" className="container">
             <div className="container-content">
             <Input onChange={this.onFileChange} />
+            <input type="text" name="caption" placeholder="Write a caption..." onChange={this.onTextChange}/>
             <button onClick={this.onFileUpload} disabled={this.state.targetFile === null}>Upload</button>
             {this.state.preview !== null && (
                 <div className="thumbnail-wrapper">
