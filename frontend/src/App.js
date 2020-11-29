@@ -16,15 +16,11 @@ const client = new ApolloClient({
   uri: serverName
 })
 
-const Input = (props) => (
-  <input
-    type="file"
-    accept=".jpg,.png"
-    name="img-loader-input"
-    multiple
-    {...props}
-  />
-)
+const customStyles = {
+  height: 'auto',
+  bottom: 'auto',
+  top: '30%'
+};
 
 class App extends React.Component {
 
@@ -49,8 +45,12 @@ class App extends React.Component {
         <button  onClick={() =>  this.handleClick(true)}>Upload</button>
         <section className="App-Feed">
           <Post/>
+          <Post/>
+          <Post/>
+          <Post/>
+          <Post/>
         </section>
-          <Rodal visible = {this.state.upload} onClose={this.hide.bind(this)}>
+          <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
             <Upload />
           </Rodal>
       </div>
