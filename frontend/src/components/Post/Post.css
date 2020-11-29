@@ -22,7 +22,7 @@
     }
     .Post-user-nickname {
     margin-left: 12px;
-    font-family: 'PT Sans', sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
     font-weight: bold;
     }
     .Post-image-bg {
@@ -33,11 +33,19 @@
     width: 100%;
     }
     .Post-caption {
+    font-family: Verdana, Geneva, sans-serif;
     padding: 16px 16px;
     }
     .Post-caption strong {
-    font-family: 'PT Sans', sans-serif;
-    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif;
+    
+    }
+    .Post-comment{
+        padding: 16px 16px;
+        font-family: Verdana, Geneva, sans-serif;
+    }
+    .Post-add-comment{
+        padding: 16px 16px;
     }
     .vjs-fade-out {
     display: none;
