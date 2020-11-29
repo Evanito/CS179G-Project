@@ -2,9 +2,12 @@ import React, { Component, useState } from 'react';
 import './App.css';
 import ApolloClient from 'apollo-boost'
 import {ApolloProvider} from "react-apollo"
-
+import Rodal from 'rodal';
+// include styles
+import 'rodal/lib/rodal.css';
 import Header from './components/Header';
 import Post from './components/Post';
+import Upload from './components/Upload';
 import useFileHandlers from './components/FileHandler/useFileHandler'
 
 let serverName = "http://evpi.nsupdate.info:14200/user";
@@ -23,48 +26,20 @@ const Input = (props) => (
   />
 )
 
-class App extends Component {
+class App extends React.Component {
 
   state = {
     targetFile: null,
     upload: false,
-    preview: null,
   };
 
   handleClick = (a) => {
     console.log("upload button:",a)
     this.setState({upload: true})
-  }
-
-  onFileChange = event =>{
-    console.log("on change", event.target.files)
-    this.setState({targetFile: event.target.files[0]})
-    const objUrl = URL.createObjectURL(event.target.files[0])
-    this.setState({preview: objUrl})
-  }
-
-  onFileUpload = () => {
-    if(this.state.targetFile){
-      const form = new FormData()
-      form.append(
-        "file",
-        this.state.targetFile,
-        this.state.targetFile.name,
-      );
-      this.setState({upload:false})
-      console.log("state",this.state.targetFile)
-      console.log("form", form);}
-      //DO POST REQUEST HERE
 
   }
-
-  FileData = () => {
-    if(this.state.targetFile && this.state.upload){
-      return(
-        <div className="thumbnail-wrapper">
-          <img className="thumbnail"src={this.state.preview}/>
-        </div>)
-    }
+  hide(){
+    this.setState({upload:false})
   }
 
   render() {
@@ -77,13 +52,9 @@ class App extends Component {
         <section className="App-Feed">
           <Post/>
         </section>
-          {this.state.upload === true && ( 
-              <div className="container">
-                <Input onChange={this.onFileChange} />
-                <button onClick={this.onFileUpload}>Submit</button>
-              </div>
-          )}
-          {this.FileData()}
+          <Rodal visible = {this.state.upload} onClose={this.hide.bind(this)}>
+            <Upload />
+          </Rodal>
       </div>
     </ApolloProvider>
   );}

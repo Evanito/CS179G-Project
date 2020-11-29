@@ -1,13 +1,27 @@
+button{
+  background-color: "black";
+  color: "white";
+  font-size: 15px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin: 0px 0px;
+  cursor: pointer;
+}
 .container {
   padding: 8px;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 }
+.container-content{
+  position: relative;
+  top: 25%;
+  width: 100%;
+  margin-top: auto;
+}
 .form {
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 .thumbnail-wrapper {
