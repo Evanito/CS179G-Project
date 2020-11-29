@@ -31,6 +31,7 @@ class Post extends React.Component {
             image: null,
             userid: null,
             caption: null,
+            comments: null,
         };
         getAll()
             .then(([username, userImage]) => {

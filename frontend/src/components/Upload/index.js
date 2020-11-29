@@ -31,15 +31,16 @@ export default class Upload extends React.Component{
             this.setState({upload:false})
             console.log("state",this.state.targetFile)
             console.log("form", form);}
-            this.setState({preview:null})
             //DO POST REQUEST HERE
+            this.setState({preview:null})
+            this.setState({targetFile:null})
     }
     render(){
         return(
         <div id="overlay" className="container">
             <div className="container-content">
             <Input onChange={this.onFileChange} />
-            <button onClick={this.onFileUpload}>Submit</button>
+            <button onClick={this.onFileUpload} disabled={this.state.targetFile === null}>Upload</button>
             {this.state.preview !== null && (
                 <div className="thumbnail-wrapper">
                 <img className="thumbnail"src={this.state.preview}/>
