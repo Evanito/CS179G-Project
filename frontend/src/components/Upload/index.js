@@ -11,6 +11,7 @@ const Input = (props) => (
 export default class Upload extends React.Component{
     state = {
         preview: null,
+        targetFile: null,
     }
     onFileChange = event =>{
         console.log("on change", event.target.files)

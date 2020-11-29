@@ -29,12 +29,10 @@ const Input = (props) => (
 class App extends React.Component {
 
   state = {
-    targetFile: null,
     upload: false,
   };
 
-  handleClick = (a) => {
-    console.log("upload button:",a)
+  handleClick = () => {
     this.setState({upload: true})
 
   }
