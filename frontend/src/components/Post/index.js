@@ -43,6 +43,9 @@ class Post extends React.Component {
                 console.log("Image ", userImage)
             })
     }
+    componentDidUpdate = () =>{
+        this.commentsRender()
+    }
     onTextChange = event =>{
         //console.log("on change", event.target.value)
         this.setState({newComment: event.target.value})
@@ -51,9 +54,17 @@ class Post extends React.Component {
         if(this.state.newComment){
             document.getElementById("comm").reset()
             console.log("Comment", this.state.newComment)
-            //PUT COMMAND GOES HERE
-            //GET THE NEW UPDATES COMMENTS HERE
+            this.setState({comments: this.state.comments + "\n" + this.state.name +': ' + this.state.newComment})
+            this.setState({newComment: null})
+            //PUT REQUEST GOES HERE
         }
+    }
+    commentsRender = () =>{
+        return(
+            <div className="Post-comment">
+                {this.state.comments}
+            </div>
+        )
     }
     render(){
         return(
@@ -76,9 +87,7 @@ class Post extends React.Component {
                 <div className="Post-caption">
                     <strong>{this.state.name}</strong> {this.state.caption}
                 </div>
-                <div className="Post-comment">
-                    {this.state.comments}
-                </div>
+                {this.commentsRender()}
                 <div className="Post-add-comment">
                     <form id="comm">
                         <input type="text" placeholder="Comment on this post" size="30" onChange={this.onTextChange}/>

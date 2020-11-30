@@ -19,7 +19,8 @@ const client = new ApolloClient({
 const customStyles = {
   height: 'auto',
   bottom: 'auto',
-  top: '30%'
+  width: '50%',
+  top: '30%',
 };
 
 class App extends React.Component {
