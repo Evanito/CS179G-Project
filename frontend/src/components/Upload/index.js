@@ -37,6 +37,7 @@ export default class Upload extends React.Component{
             console.log("state",this.state.targetFile)
             console.log("caption", this.state.caption);}
             //DO POST REQUEST HERE
+            document.getElementById("cap").reset()
             this.setState({preview:null})
             this.setState({targetFile:null})
     }
@@ -45,8 +46,10 @@ export default class Upload extends React.Component{
         <div id="overlay" className="container">
             <div className="container-content">
             <Input onChange={this.onFileChange} />
-            <input type="text" name="caption" placeholder="Write a caption..." onChange={this.onTextChange}/>
-            <button onClick={this.onFileUpload} disabled={this.state.targetFile === null}>Upload</button>
+            <form id="cap">
+                <input type="text" name="caption" placeholder="Write a caption..." onChange={this.onTextChange}/>
+                <button onClick={this.onFileUpload} disabled={this.state.targetFile === null}>Upload</button>
+            </form>
             {this.state.preview !== null && (
                 <div className="thumbnail-wrapper">
                 <img className="thumbnail"src={this.state.preview}/>
