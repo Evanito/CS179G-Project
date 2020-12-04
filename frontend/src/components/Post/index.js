@@ -44,7 +44,7 @@ class Post extends React.Component {
             })
     }
     componentDidUpdate = () =>{
-        this.commentsRender()
+        //this.commentsRender()
     }
     onTextChange = event =>{
         //console.log("on change", event.target.value)
@@ -90,7 +90,7 @@ class Post extends React.Component {
                 {this.commentsRender()}
                 <div className="Post-add-comment">
                     <form id="comm">
-                        <input type="text" placeholder="Comment on this post" size="30" onChange={this.onTextChange}/>
+                        <input type="text" id="newComm" placeholder="Comment on this post" size="30" onChange={this.onTextChange}/>
                     </form>
                     <button onClick={this.onComment} disabled={this.state.newComment === null}>Comment</button>
                 </div>
