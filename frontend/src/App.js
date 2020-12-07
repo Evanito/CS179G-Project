@@ -31,7 +31,6 @@ class App extends React.Component {
 
   handleClick = () => {
     this.setState({upload: true})
-
   }
   hide(){
     this.setState({upload:false})
