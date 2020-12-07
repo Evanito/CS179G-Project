@@ -1,5 +1,6 @@
 import "./Post.css"
 import React, { Component, useRef } from "react";
+import axios from 'axios'
 import sp from '../../Images/sample.png';
 import av from '../../Images/avatar.png';
 const fakeimage = sp;
@@ -57,6 +58,13 @@ class Post extends React.Component {
             this.setState({comments: this.state.comments + "\n" + this.state.name +': ' + this.state.newComment})
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
+            const comm = {
+                data: this.state.newComment
+            }
+            axios.post(serverName + 'endpoint', {comm})
+                .then(res => {
+                    console.log(res)
+                })
         }
     }
     commentsRender = () =>{
