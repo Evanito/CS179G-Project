@@ -1,8 +1,10 @@
+import axios from 'axios';
 import React from 'react';
+let serverName = "http://evpi.nsupdate.info:14200/";
 const Input = (props) => (
     <input
       type="file"
-      accept=".jpg,.png"
+      accept=".jpg,.png,.jpeg,.gif"
       name="image"
       multiple
       {...props}
@@ -27,17 +29,23 @@ export default class Upload extends React.Component{
 
     onFileUpload = () => {
         if(this.state.targetFile){
-            const form = new FormData()
+            let form = new FormData()
             form.append(
-            "file",
-            this.state.targetFile,
-            this.state.targetFile.name,
-            );
+                'image', this.state.targetFile,
+            )
+            form.append(
+                this.state.caption
+            )
             this.setState({upload:false})
             console.log("state",this.state.targetFile)
             console.log("caption", this.state.caption);}
-            //DO POST REQUEST HERE
             document.getElementById("cap").reset()
+            //DO POST REQUEST HERE
+            axios.post(serverName + '/upload')
+                .then(res => {
+                    console.log(res)
+                    //get the post id form here
+                })
             this.setState({preview:null})
             this.setState({targetFile:null})
     }
