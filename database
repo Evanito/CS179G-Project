@@ -1,0 +1,91 @@
+import sqlite3 # get connected to libr
+try:
+    connect = sqlite3.connect("insta.db") #connect to DB
+    print("We are connected to the insta.db ->")
+except exception as e:
+    print("error durint connection: ", str(e))
+
+c = connect.cursor()  # cursor
+###############################################################################cut 1
+#All tables
+print("Creating tables....")
+c.execute(""" CREATE TABLE USER(
+                    USER_NAME CHAR(20) NOT NULL,
+                    USR_ID CHAR(20) NOT NULL,
+                    F_NAME CHAR(20) NOT NULL,
+                    L_NAME CHAR(20) NOT NULL,
+                    BIO CHAR(20) NOT NULL,
+                    EMAIL CHAR(20) NOT NULL,
+                    PRIMARY KEY (USR_ID)
+                    )""")
+c.execute(""" CREATE TABLE PHOPTOS(
+                    USR_ID char(20) NOT NULL,
+                    PHOTO_ID INTEGER NOT NULL,
+                    primary key(PHOTO_ID),
+                    FOREIGN KEY(USR_ID) REFERENCES USER(USR_ID)
+                    )""")
+c.execute(""" CREATE TABLE LIKES(
+                    USR_ID char(20) NOT NULL,
+                    PHOTO_ID INTEGER NOT NULL,
+                    LIKE_ID INTEGER NOT NULL,
+                    primary key(LIKE_ID),
+                    FOREIGN KEY(USR_ID) REFERENCES USER(USR_ID),
+                    FOREIGN KEY(PHOTO_ID) REFERENCES PHOPTOS(PHOTO_ID)
+                    );""")
+c.execute(""" CREATE TABLE CMNT(
+                    USR_ID char(20) NOT NULL,
+                    PHOTO_ID INTEGER NOT NULL,
+                    CMNT_ID INTEGER NOT NULL,
+                    primary key(CMNT_ID),
+                    FOREIGN KEY(USR_ID) REFERENCES USER(USR_ID),
+                    FOREIGN KEY(PHOTO_ID) REFERENCES PHOPTOS(PHOTO_ID)
+                    );""")
+c.execute(""" CREATE TABLE TAG(
+                    USR_ID char(20) NOT NULL,
+                    PHOTO_ID INTEGER NOT NULL,
+                    TAG_ID INTEGER NOT NULL,
+                    USER_NAME CHAR(20) NOT NULL,
+                    CNTC char(50),
+                    primary key(TAG_ID),
+                    FOREIGN KEY(USR_ID) REFERENCES USER(USR_ID),
+                    FOREIGN KEY(USER_NAME) REFERENCES USER(USER_NAME),
+                    FOREIGN KEY(PHOTO_ID) REFERENCES PHOTOS(PHOTO_ID)
+                    );
+""")
+###############################################################################cut 2
+# USER (usr_id , f_name, last name, bio, email)
+print("Adding the first data point to our tables....")
+many_users = [('aband','1','andre','band','iiwii','ab@gmail.com'),
+                ('rtod','2','ronan','todd','good man ronan','rt@gmail.com'),
+                ('ev_g','3','evan','gresh','im alway mad','eg@gmail.com'),
+                ('mwalsh','4','mat' ,'walsh','hola','mw@gmail.com'),
+              ]
+###############################################################################cut 3
+#use .execute for only 1 command
+#use .executemany for many
+c.executemany("INSERT INTO USER VALUES (?,?,?,?,?,?)", many_users)
+###############################################################################cut 4
+#.fetchone() for only one also can do this to fetch the index ==> (c.fetchone()[0]) which gives the user id and so on
+#.fetchmany()
+#.fetchall()
+print("Check to see if we actually added data")
+c.execute("SELECT * FROM USER")
+#print(c.fetchall())
+###############################################################################cut 5
+items = c.fetchall()
+for i in items:
+    print(i)
+
+
+
+
+
+############################################################################### last cut for now
+print("command executed")
+# null /integer /real /text / BLOB : phote for instanse  /
+connect.commit()
+print ("Records created successfully")
+connect.close() #close connection
+
+
+
