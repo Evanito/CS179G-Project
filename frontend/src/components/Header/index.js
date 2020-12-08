@@ -1,4 +1,5 @@
 import React from "react"
+import "./Header.css"
 
 class Header extends React.Component{
     render(){
@@ -7,7 +8,6 @@ class Header extends React.Component{
                 <div className="Nav-menus">
                     <div className="Nav-brand">
                         <a className="Nav-brand-logo" href="/">
-                            Instagram
                         </a>
                     </div>
                 </div>
