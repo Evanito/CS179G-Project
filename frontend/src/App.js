@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, {} from 'react';
 import './App.css';
 import ApolloClient from 'apollo-boost'
 import {ApolloProvider} from "react-apollo"
@@ -6,9 +6,9 @@ import Rodal from 'rodal';
 // include styles
 import 'rodal/lib/rodal.css';
 import Header from './components/Header';
-import Post from './components/Post';
+import Timeline from './components/Timeline';
 import Upload from './components/Upload';
-import useFileHandlers from './components/FileHandler/useFileHandler'
+
 
 let serverName = "http://evpi.nsupdate.info:14200/user";
 
@@ -43,16 +43,10 @@ class App extends React.Component {
       <div className="App">
         <Header/>
         <button  onClick={() =>  this.handleClick(true)}>Upload</button>
-        <section className="App-Feed">
-          <Post/>
-          <Post/>
-          <Post/>
-          <Post/>
-          <Post/>
-        </section>
-          <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
-            <Upload />
-          </Rodal>
+        <Timeline globalUser={"John"}/>
+        <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
+          <Upload />
+        </Rodal>
       </div>
     </ApolloProvider>
   );}
