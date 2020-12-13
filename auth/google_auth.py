@@ -1,6 +1,3 @@
-# Original file taken from Matt Button's site:
-# https://www.mattbutton.com/2019/01/05/google-authentication-with-python-and-flask/
-
 import functools
 import os
 
