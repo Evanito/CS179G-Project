@@ -40,6 +40,9 @@ class App extends React.Component {
     profileUser: -1,
     profileView: false,
     searchBar: null,
+
+    // Added by Matt.
+    uploadCheck: false,
   };
 
   handleClick = () => {
@@ -83,6 +86,11 @@ class App extends React.Component {
     //do search
   }
 
+  uploadCheck = () =>{
+    // Check if login matches profile.
+
+  }
+
   render() {
     //console.log(this.state.upload)
     return (
@@ -100,7 +108,7 @@ class App extends React.Component {
         {this.state.profileView === true && (
           
 
-          <Profile globalUser={"John"} userid={this.state.profileUser} />
+          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView}/>
         )}
         {this.state.authtoken !== null && this.state.profileView === false&&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>

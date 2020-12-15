@@ -15,6 +15,7 @@ class Timeline extends React.Component {
             // Profile info added by Matt.
             name: null,
             globalUser: this.props.globalUser,
+            profileView: this.props.profileView,
             image: null,
             userpic: null,
             
@@ -85,7 +86,7 @@ class Timeline extends React.Component {
                 <strong>  {this.state.follows}</strong>
                 </div>
                 <div className="Post">
-                    {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick}/>)}
+                    {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} profileView={this.state.profileView}onClick={this.props.onClick}/>)}
                 </div>
             </article>
         )

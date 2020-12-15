@@ -55,8 +55,10 @@ class Post extends React.Component {
             newComment: null,
             header: this.props.header,
             onClick: this.props.onClick,
+            
+            profileView: this.props.profileView,
         };
-        //console.log("sdlfjkhs ", this.state.onClick)
+        console.log("haha yes", this.state.profileView)
         axios.get(serverName + 'post/' + this.state.postid)
             .then(res => {
                 //console.log("DSLKHJJFL: ",res.data.data.userid)
@@ -78,8 +80,14 @@ class Post extends React.Component {
             })
 
     }
-    componentDidUpdate = () =>{
-        //this.commentsRender()
+    componentDidUpdate (prevProps) {
+        if(this.props.profileView !== prevProps.profileView){
+            this.setState({auth: this.props.profileView})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            console.log("Update profileView")
+            // this.fetchData(this.props.profileView)
+        }
     }
     onTextChange = event =>{
         //console.log("on change", event.target.value)
@@ -135,7 +143,7 @@ class Post extends React.Component {
                         <img src={this.state.userpic} />
                     </div>
                     <div className="Post-user-nickname">
-                        <button onClick={this.click} disabled={false}>{this.state.name}</button>
+                        <button onClick={this.click} disabled={this.state.profileView}>{this.state.name}</button>
                     </div>
                     </div>
                 </header>
