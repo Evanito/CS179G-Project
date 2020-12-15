@@ -72,7 +72,7 @@ class Timeline extends React.Component {
                                     image: tpic,
                                     postid: this.state.requests[i]
                                 }
-                                console.log("Feed test", temp)
+                                //console.log("Feed test", temp)
                                 let updateFeed = this.state.post.concat(temp)
                                 this.setState({post:updateFeed})
                             })

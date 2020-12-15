@@ -38,16 +38,17 @@ export default class Upload extends React.Component{
             )
             this.setState({upload:false})
             console.log("state",this.state.targetFile)
-            console.log("caption", this.state.caption);}
+            console.log("caption", this.state.caption);
             document.getElementById("cap").reset()
             //DO POST REQUEST HERE
             axios.post(serverName + '/upload')
-                .then(res => {
-                    console.log(res)
-                    //get the post id form here
-                })
+            .then(res => {
+                console.log(res)
+                //get the post id form here
+            })
             this.setState({preview:null})
             this.setState({targetFile:null})
+        }
     }
     render(){
         return(

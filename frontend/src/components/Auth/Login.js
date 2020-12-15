@@ -7,9 +7,10 @@ import { GoogleLogin } from 'react-google-login';
 const clientId =
   '820186523469-4hhhse7jujgedn0rnood11turbppur5u.apps.googleusercontent.com';
 
-function Login() {
+function Login(props) {
   const onSuccess = (res) => {
-    console.log('Login Success: currentUser:', res.profileObj);
+    console.log('Login Success:');
+    props.onClick(res.tokenId)
   };
 
   const onFailure = (res) => {
