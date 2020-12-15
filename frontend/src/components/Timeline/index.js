@@ -24,26 +24,24 @@ class Timeline extends React.Component {
             //this will contain ready to be mapped post components
         }
         console.log("Constructor")
-        this.fetchData(this.state.auth, this.state.loggedUserid)
+        this.fetchData()
     }
-    fetchData(authtoken, uId){
+    fetchData(){
         //get list of all post ids
-        //console.log("auth: ", this.state.auth)
+        //console.log("auth fetch: ", this.state.auth)
         this.setState({post:[]})
-        axios.get(serverName +'timeline',{
-            params:{
-                page: this.state.index,
-            },
+        fetch(serverName +'timeline',{
             headers: new Headers({
-                'Authorization': 'Bearer ' + authtoken
+                'Authorization': 'Bearer ' + this.state.auth
               })
         })
+        .then(res => res.json())
         .then(res => {
-            this.setState({requests: res.data.data.map(Number)})
+            console.log("timeline return: ", res)
+            this.setState({requests: res.data.map(Number)})
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
-            console.log("postid: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 let temp = {
                     postid: this.state.requests[i],
@@ -52,6 +50,7 @@ class Timeline extends React.Component {
                 let updateFeed = this.state.post.concat(temp)
                 this.setState({post:updateFeed})        
             }
+        
         })
 
     }
@@ -62,12 +61,12 @@ class Timeline extends React.Component {
             //console.log("update auth: ", this.props.auth)
             //console.log("old auth: ", prevProps.auth)
             console.log("Update auth timeline")
-            this.fetchData(this.props.auth)
+            this.fetchData()
         }
         if(this.props.loggedUserid !== prevProps.loggedUserid){
             console.log("Update user timeline")
             this.setState({loggedUserid:this.props.loggedUserid})
-            this.fetchData(this.props.auth, this.props.loggedUserid)
+            this.fetchData()
         }
     }
 
