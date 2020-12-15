@@ -12,6 +12,7 @@ import Upload from './components/Upload';
 import Profile from './components/Profile';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
+import Explore from './components/Explore';
 
 let serverName = "http://evpi.nsupdate.info:14200/";
 let tempUser = 1;
@@ -107,11 +108,13 @@ class App extends React.Component {
         <Logout onClick={this.onLogout}/>
         {this.state.profileView === true && (
           
-
           <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView}/>
         )}
         {this.state.authtoken !== null && this.state.profileView === false&&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
+        )}
+        {this.state.authtoken === null &&(
+          <Explore/>
         )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
           <Upload />

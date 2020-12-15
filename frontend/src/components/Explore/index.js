@@ -3,7 +3,7 @@ import React, { } from "react";
 import axios from 'axios'
 import Post from "../Post"
 let serverName = "http://evpi.nsupdate.info:14200/";
-class Profile extends React.Component {
+class Explore extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -42,7 +42,7 @@ class Profile extends React.Component {
         //console.log("auth: ", this.state.auth)
         console.log("profile id ", this.state.userid)
         this.setState({post:[]})
-        axios.get(serverName +'userfeed/' + this.state.userid,{
+        axios.get(serverName +'explore',{
             params:{
                 page: this.state.index,
             },
@@ -94,4 +94,4 @@ class Profile extends React.Component {
     
 
 }
-export default Profile
+export default Explore

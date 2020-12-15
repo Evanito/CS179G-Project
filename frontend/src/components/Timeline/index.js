@@ -30,7 +30,7 @@ class Timeline extends React.Component {
         //get list of all post ids
         //console.log("auth: ", this.state.auth)
         this.setState({post:[]})
-        axios.get(serverName +'timeline/' + uId,{
+        axios.get(serverName +'timeline',{
             params:{
                 page: this.state.index,
             },
