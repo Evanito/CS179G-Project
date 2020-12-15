@@ -1,4 +1,4 @@
-import "./Timeline.css"
+//import "./Timeline.css"
 import React, { } from "react";
 import axios from 'axios'
 import Post from "../Post"
@@ -24,21 +24,20 @@ class Timeline extends React.Component {
             //this will contain ready to be mapped post components
         }
         console.log("Constructor")
-        this.fetchData(this.state.auth, this.state.loggedUserid)
+        this.fetchData()
     }
-    fetchData(authtoken, uId){
+    fetchData(){
         //get list of all post ids
         //console.log("auth: ", this.state.auth)
+        console.log("profile id ", this.state.userid)
         this.setState({post:[]})
-        axios.get(serverName +'timeline/' + uId,{
+        axios.get(serverName +'userfeed/' + this.state.userid,{
             params:{
                 page: this.state.index,
             },
-            headers: new Headers({
-                'Authorization': 'Bearer ' + authtoken
-              })
         })
         .then(res => {
+            console.log("Profile ", res)
             this.setState({requests: res.data.data.map(Number)})
             //iterate through all post ids to get relevant data
             //need the following
@@ -55,22 +54,6 @@ class Timeline extends React.Component {
         })
 
     }
-    //ADD THIS BACK IN WHEN AUTH IS READY
-    componentDidUpdate(prevProps){
-        if(this.props.auth !== prevProps.auth){
-            this.setState({auth: this.props.auth})
-            //console.log("update auth: ", this.props.auth)
-            //console.log("old auth: ", prevProps.auth)
-            console.log("Update auth timeline")
-            this.fetchData(this.props.auth)
-        }
-        if(this.props.loggedUserid !== prevProps.loggedUserid){
-            console.log("Update user timeline")
-            this.setState({loggedUserid:this.props.loggedUserid})
-            this.fetchData(this.props.auth, this.props.loggedUserid)
-        }
-    }
-
     render(){
         return(
             <div className="Post">

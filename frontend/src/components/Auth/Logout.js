@@ -5,9 +5,10 @@ import { GoogleLogout } from 'react-google-login';
 
 const clientId = '820186523469-4hhhse7jujgedn0rnood11turbppur5u.apps.googleusercontent.com';
 
-function Logout() {
+function Logout(props) {
     const onSuccess = () => {
         alert('Logged out successfully');
+        props.onClick()
     };
 
     return (
