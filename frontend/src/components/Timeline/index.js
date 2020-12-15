@@ -29,6 +29,7 @@ class Timeline extends React.Component {
         super(props)
         this.state = {
             userid: this.props.userid,
+            loggedUserid: this.props.loggedUserid,
             globalUser: this.props.globalUser, 
             index: this.props.index,
             requests: [], //list of all postid to fetch from the server
@@ -41,7 +42,7 @@ class Timeline extends React.Component {
             //this will contain ready to be mapped post components
         }
         //get list of all post ids
-        axios.get(serverName +'timeline/1',{
+        axios.get(serverName +'timeline/' + this.state.loggedUserid,{
             params:{
                 page: this.state.index,
             }

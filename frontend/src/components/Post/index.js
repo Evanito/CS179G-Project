@@ -1,10 +1,21 @@
 import "./Post.css"
 import React, { } from "react";
 import axios from 'axios'
+import styled from 'styled-components'
 
 
 let serverName = "http://evpi.nsupdate.info:14200/";
-
+const Button = styled.button`
+  background-color: white;
+  color: black;
+  font-size: 14px;
+  font-weight: bold,
+  padding: 5px 25x;
+  border-radius: 0px;
+  margin: 0px 0px;
+  cursor: pointer;
+  border: none,
+`;
 
 class Post extends React.Component {
     constructor(props){
@@ -58,6 +69,7 @@ class Post extends React.Component {
             </div>
         )
     }
+    
     render(){
         return(
             <article className="Post" ref="Post">
@@ -67,7 +79,7 @@ class Post extends React.Component {
                         <img src={this.state.userpic} />
                     </div>
                     <div className="Post-user-nickname">
-                        <span>{this.state.name}</span>
+                        <Button>{this.state.name}</Button>
                     </div>
                     </div>
                 </header>

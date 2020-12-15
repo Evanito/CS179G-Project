@@ -11,6 +11,7 @@ import Upload from './components/Upload';
 
 
 let serverName = "http://evpi.nsupdate.info:14200/user";
+let tempUser = 1;
 
 const client = new ApolloClient({
   uri: serverName
@@ -42,8 +43,8 @@ class App extends React.Component {
     <ApolloProvider client={client}>
       <div className="App">
         <Header/>
-        <button  onClick={() =>  this.handleClick(true)}>Upload</button>
-        <Timeline globalUser={"John"}/>
+        <button  onClick={() =>  this.handleClick()}>Upload</button>
+        <Timeline globalUser={"John"} loggedUserid={tempUser}/>
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
           <Upload />
         </Rodal>
