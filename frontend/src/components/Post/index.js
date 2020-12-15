@@ -135,7 +135,7 @@ class Post extends React.Component {
                         <img src={this.state.userpic} />
                     </div>
                     <div className="Post-user-nickname">
-                        <button onClick={this.click}>{this.state.name}</button>
+                        <button onClick={this.click} disabled={false}>{this.state.name}</button>
                     </div>
                     </div>
                 </header>

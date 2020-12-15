@@ -89,15 +89,17 @@ class App extends React.Component {
     <ApolloProvider client={client}>
       <div className="App">
         <Header/>
-        <button  onClick={() =>  this.handleClick()}>Upload</button>
+        <button  onClick={() =>  this.handleClick()} disabled={this.state.profileView}>Upload</button>
         <button disabled={!this.state.profileView} onClick={this.goBack}>Back</button>
         <form id="search">
           <input type="text" placeholder="Search User" onChange={this.onTextChange}/>
         </form>
         <button onClick={this.onSearch} disabled={this.state.searchBar === null}>Search</button>
         <Login onClick={this.onClick}/>
-        <Logout onClick={this.onLogout} />
+        <Logout onClick={this.onLogout}/>
         {this.state.profileView === true && (
+          
+
           <Profile globalUser={"John"} userid={this.state.profileUser} />
         )}
         {this.state.authtoken !== null && this.state.profileView === false&&(

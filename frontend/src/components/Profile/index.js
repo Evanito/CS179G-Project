@@ -11,6 +11,16 @@ class Timeline extends React.Component {
             loggedUserid: this.props.loggedUserid,
             globalUser: this.props.globalUser, 
             index: this.props.index,
+
+            // Profile info added by Matt.
+            name: null,
+            globalUser: this.props.globalUser,
+            image: null,
+            userpic: null,
+            
+            follows: 0,
+            followed: true,
+
             requests: [], //list of all postid to fetch from the server
             post: [],
             header: this.props.header,
@@ -54,11 +64,30 @@ class Timeline extends React.Component {
         })
 
     }
+
+    onFollow = () => {
+        if (this.state.followed == true) {
+            this.setState({follows: this.state.follows + 1})
+            this.setState({followed: false})
+        }
+
+        else {
+            this.setState({follows: this.state.follows - 1})
+            this.setState({followed: true})
+        }
+    }
+
     render(){
         return(
-            <div className="Post">
-                {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick}/>)}
-            </div>
+            <article>
+                <div>
+                <button onClick={this.onFollow} >Follow</button>
+                <strong>  {this.state.follows}</strong>
+                </div>
+                <div className="Post">
+                    {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick}/>)}
+                </div>
+            </article>
         )
     }
     
