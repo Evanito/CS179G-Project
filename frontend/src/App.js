@@ -43,25 +43,19 @@ class App extends React.Component {
     this.setState({upload:false})
   }
   onClick = (id) => {
-    this.setState({globalUser: id})
+    //this.setState({globalUser: id})
     //console.log("globaluserid",this.state.globalUser)
 
     fetch(serverName+"authenticate", {
       method: 'post',
       headers: new Headers({
-        'Authorization': 'Bearer ' + this.state.globalUser
+        'Authorization': 'Bearer ' + id
       })
     })
-
-    /* axios.post(serverName+"authenticate", {headers: {
-      "Authorization" : `Bearer ${this.state.globalUser}`
-    }})
       .then(res => {
-        console.log(res.data)
-        .catch((error)=>{
-          console.log(error)
-        })
-      }) */
+        console.log(res)
+      })
+
   }
 
   render() {

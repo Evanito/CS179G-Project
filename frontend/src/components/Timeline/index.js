@@ -64,7 +64,7 @@ class Timeline extends React.Component {
                                 //console.log("user", userinfo)
                                 //console.log("post", postinfo)
                                 let tpic = URL.createObjectURL(pic)
-                                console.log("pic", tpic)
+                                //console.log("pic", tpic)
                                 let temp = {
                                     name: userinfo.name,
                                     capt: postinfo.description,
