@@ -27,6 +27,8 @@ class Post extends React.Component {
             userpic: null,
             caption: this.props.caption,
             comments: "",
+            likes: 0,
+            liked: false,
             postid: this.props.postid,
             userid: this.props.userid,
             newComment: null,
@@ -62,6 +64,19 @@ class Post extends React.Component {
                 })
         }
     }
+
+    onLike = () => {
+        if (this.state.liked == true) {
+            this.setState({likes: this.state.likes - 1})
+            this.setState({liked: false})
+        }
+
+        else {
+            this.setState({likes: this.state.likes + 1})
+            this.setState({liked: true})
+        }
+    }
+
     commentsRender = () =>{
         return(
             <div className="Post-comment">
@@ -88,6 +103,12 @@ class Post extends React.Component {
                     <img src={this.state.image} />
                     </div>
                 </div>
+
+                <div className="Post-likes">
+                <button onClick={this.onLike} >Like</button>
+                <strong>  {this.state.likes}</strong>
+                </div>
+
                 <div className="Post-caption">
                     <strong>{this.state.name}</strong> {this.state.caption}
                 </div>

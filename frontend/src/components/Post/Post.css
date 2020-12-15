@@ -25,6 +25,9 @@
     font-family: Verdana, Geneva, sans-serif;
     font-weight: bold;
     }
+    .Post-likes {
+    background-color: #efefef;
+    }
     .Post-image-bg {
     background-color: #efefef;
     }
