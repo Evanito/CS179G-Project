@@ -41,6 +41,10 @@ class Timeline extends React.Component {
             postid: null */
             //this will contain ready to be mapped post components
         }
+        this.fetchData();
+    }
+
+    fetchData(){
         //get list of all post ids
         axios.get(serverName +'timeline/' + this.state.loggedUserid,{
             params:{
@@ -52,13 +56,13 @@ class Timeline extends React.Component {
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
+            console.log("Requests: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 //get post info
+                console.log("testste",this.state.requests[i])
                 axios.get(serverName + 'post/' + this.state.requests[i])
                     .then(res => {
-                        //console.log("testste",this.state.requests[i])
-                        let userid = res.data.data.userid
-                        
+                        let userid = res.data.data.userid        
                         getAll(this.state.requests[i],userid)
                             .then(([userinfo,postinfo,pic]) => {
                                 //console.log("user", userinfo)
@@ -72,15 +76,25 @@ class Timeline extends React.Component {
                                     image: tpic,
                                     postid: this.state.requests[i]
                                 }
-                                console.log("Feed test", temp)
+                                console.log("Feed test", this.state.requests[i])
                                 let updateFeed = this.state.post.concat(temp)
                                 this.setState({post:updateFeed})
                             })
                     })
                 }
             })
+        /* let temp = this.state.post
+        temp.sort(function (a,b){
+
+        }) */
     }
-    componentDidMount(){
+
+    componentDidUpdate(prevProps){
+        if(this.props.loggedUserid !== prevProps.loggedUserid){
+            this.setState({loggedUserid: this.props.loggedUserid})
+            this.setState({post:[]})
+            this.fetchData();
+        }
     }
 
     render(){
