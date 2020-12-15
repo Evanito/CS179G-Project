@@ -27,8 +27,10 @@ class Post extends React.Component {
             userpic: null,
             caption: this.props.caption,
             comments: "",
+
             likes: 0,
             liked: false,
+
             postid: this.props.postid,
             userid: this.props.userid,
             newComment: null,
