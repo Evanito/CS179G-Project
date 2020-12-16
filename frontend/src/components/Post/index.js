@@ -61,6 +61,7 @@ class Post extends React.Component {
             newComment: null,
             header: this.props.header,
             onClick: this.props.onClick,
+            auth: this.props.auth,
             
             profileView: this.props.profileView,
         };
@@ -103,13 +104,24 @@ class Post extends React.Component {
         if(this.state.newComment){
             document.getElementById("comm").reset()
             //console.log("Comment", this.state.newComment)
-            this.setState({comments: this.state.comments + "\n" + this.state.globalUser +': ' + this.state.newComment})
+            let temp = {
+                "comment": this.state.newComment,
+                "name": this.state.name,
+            }
+            this.setState({comments: this.state.comments.concat(temp)})
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
-            const comm = {
-                data: this.state.newComment
+            let form = new FormData()
+            form = {
+                "data": this.state.newComment
             }
-            axios.post(serverName + 'endpoint', {comm})
+            fetch(serverName + '/comment', {
+                method:'post',
+                body: form,
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
                 .then(res => {
                     console.log(res)
                 })

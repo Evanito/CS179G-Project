@@ -78,7 +78,7 @@ class Timeline extends React.Component {
     render(){
         return(
             <div className="Post">
-                {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick}/>)}
+                {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick} auth={this.state.auth}/>)}
             </div>
         )
     }

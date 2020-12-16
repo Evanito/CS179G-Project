@@ -53,7 +53,7 @@ class Explore extends React.Component {
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
-            console.log("postid: ", this.state.requests)
+            //console.log("postid: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 let temp = {
                     postid: this.state.requests[i],
