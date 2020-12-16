@@ -40,14 +40,15 @@ class DBImp:
         return result
 
     def delete_user_id(self, userid):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute(f'DELETE FROM dbo."FOLLOWS" WHERE (USER_ID= {userid})')
         cursor.execute(f'DELETE FROM dbo."FOLLOWS" WHERE (TARGET_ID= {userid})')
         cursor.execute(f'DELETE FROM dbo."LIKES" WHERE (USER_ID= {userid})')
         cursor.execute(f'DELETE FROM dbo."COMMENTS" WHERE (USER_ID= {userid})')
         cursor.execute(f'DELETE FROM dbo."POSTS" WHERE (USER_ID= {userid})')
         cursor.execute(f'DELETE FROM dbo."USERS" WHERE (USER_ID= {userid})')
-        self.connection.commit()
+        connection.commit()
 
             ############post getters##########
     def get_post_postid(self, post_id):
@@ -77,11 +78,12 @@ class DBImp:
         return result
 
     def delete_post_id(self, postid):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute(f'DELETE FROM dbo."LIKES" WHERE (POST_ID= {postid})')
         cursor.execute(f'DELETE FROM dbo."COMMENTS" WHERE (POST_ID= {postid})')
         cursor.execute(f'DELETE FROM dbo."POSTS" WHERE (POST_ID= {postid})')
-        self.connection.commit()
+        connection.commit()
         ############comment getters##########
 
     def get_comment_postid(self, post_id):
@@ -90,9 +92,10 @@ class DBImp:
         return result
 
     def delete_comment_id(self, commentid):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute(f'DELETE FROM dbo."COMMENTS" WHERE (COMMENT_ID= {commentid})')
-        self.connection.commit()
+        connection.commit()
         ############likes getters##########
 
     def get_like_postid(self, post_id):
@@ -111,9 +114,10 @@ class DBImp:
         return result
 
     def delete_like(self, userid, postid):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute(f'DELETE FROM dbo."LIKES" WHERE (POST_ID= {postid}) AND (USER_ID= {userid})')
-        self.connection.commit()
+        connection.commit()
 
         ############follows getters##########
 
@@ -133,9 +137,10 @@ class DBImp:
         return result
 
     def delete_follow(self, userid, targetid):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute(f'DELETE FROM dbo."FOLLOWS" WHERE (TARGET_ID= {targetid}) AND (USER_ID= {userid})')
-        self.connection.commit()
+        connection.commit()
 
     def do_query(self, query):
         connection = pyodbc.connect(self.connect_str)
@@ -148,42 +153,48 @@ class DBImp:
         return None
 
     def add_user(self, usr_name, usr_id, first_n, last_n, bio, email, avatar):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         user = (usr_name, usr_id, first_n, last_n, bio, email, avatar)
         cursor.execute("""INSERT INTO dbo."USERS" (USER_NAME, USER_ID, F_NAME, L_NAME, BIO, EMAIL, AVATAR) 
         VALUES (?,?,?,?,?,?,?)""", user)
-        self.connection.commit()
+        connection.commit()
 
     def add_post(self, user_id, post_id, descript, posted_at):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         post = (user_id, post_id, descript, posted_at)
         cursor.execute("""INSERT INTO dbo."POSTS" (USER_ID, POST_ID, DESCRIPTION, POSTED_AT) 
         VALUES (?,?,?,?)""", post)
-        self.connection.commit()
+        connection.commit()
 
     def add_like(self, user_id, post_id):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         like = (user_id, post_id)
         cursor.execute("""INSERT INTO dbo."LIKES" (USER_ID, POST_ID) 
         VALUES (?,?)""", like)
-        self.connection.commit()
+        connection.commit()
 
     def add_comment(self, user_id, post_id, comment_id):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         comment = (user_id, post_id, comment_id)
         cursor.execute("""INSERT INTO dbo."COMMENTS" (USER_ID, POST_ID,COMMENT_ID) 
         VALUES (?,?,?)""", comment)
-        self.connection.commit()
+        connection.commit()
 
     def add_follows(self, user_id, target_id):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         follow = (user_id, target_id)
         cursor.execute("""INSERT INTO dbo."FOLLOWS" (USER_ID, TARGET_ID) 
         VALUES (?,?)""", follow)
-        self.connection.commit()
+        connection.commit()
 
     def create_tables(self):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute("""CREATE TABLE dbo."USERS"(
                     USER_NAME CHAR(50) NOT NULL,
                     USER_ID CHAR(50) NOT NULL,
@@ -227,16 +238,17 @@ class DBImp:
                     PRIMARY KEY (USER_ID, TARGET_ID),
                     FOREIGN KEY(USER_ID) REFERENCES USERS(USER_ID)
                     )""")
-        self.connection.commit()
+        connection.commit()
 
     def drop_tables(self):
-        cursor = self.connection.cursor()
+        connection = pyodbc.connect(self.connect_str)
+        cursor = connection.cursor()
         cursor.execute("""DROP TABLE dbo.\"COMMENTS\"""")
         cursor.execute("""DROP TABLE dbo.\"LIKES\"""")
         cursor.execute("""DROP TABLE dbo.\"FOLLOWS\"""")
         cursor.execute("""DROP TABLE dbo.\"POSTS\"""")
         cursor.execute("""DROP TABLE dbo.\"USERS\"""")
-        self.connection.commit()
+        connection.commit()
 
 
 if __name__ == "__main__":

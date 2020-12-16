@@ -15,14 +15,18 @@ class CS179GController:
 
     def search_user(self, query, count=10):
         userresults = self.dbc.get_query_in_user(query)
+        results = []
         if userresults is not None:
-            return list(userresults["USER_ID"][:count])
+            idlist = [entry.strip() for entry in list(userresults["USER_ID"].sort_values(ascending=False)[:count])]
+            for userid in idlist:
+                results.append(self.get_user_by_id(userid))
+            return results
         return []
 
     def search_tag(self, query, count=10):
         postresults = self.dbc.get_query_in_caption(query.strip("# "))
         if postresults is not None:
-            return [entry.strip() for entry in list(postresults["POST_ID"][:count])]
+            return [entry.strip() for entry in list(postresults["POST_ID"].sort_values(ascending=False)[:count])]
         return []
 
     def get_user_by_id(self, userid):
@@ -43,9 +47,11 @@ class CS179GController:
         if postdata is not None:
             likedata = self.dbc.get_like_postid(postid)
             likes = len(likedata["POST_ID"]) if likedata is not None else 0
+            description = postdata["DESCRIPTION"][0].strip()
+            description = "" if description == "null" else description
             post = {
                 "userid": postdata["USER_ID"][0].strip(),
-                "description": postdata["DESCRIPTION"][0].strip(),
+                "description": description,
                 "postid": postdata["POST_ID"][0].strip(),
                 "posted": postdata["POSTED_AT"][0].strip(),
                 "likes": likes
