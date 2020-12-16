@@ -31,6 +31,7 @@ class Timeline extends React.Component {
         //console.log("auth fetch: ", this.state.auth)
         this.setState({post:[]})
         fetch(serverName +'timeline',{
+            method: 'get',
             headers: new Headers({
                 'Authorization': 'Bearer ' + this.state.auth
               })

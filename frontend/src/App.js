@@ -98,14 +98,14 @@ class App extends React.Component {
     <ApolloProvider client={client}>
       <div className="App">
         <Header/>
+        <Login onClick={this.onClick}/>
+        <Logout onClick={this.onLogout}/>
         <button  onClick={() =>  this.handleClick()} disabled={this.state.profileView}>Upload</button>
         <button disabled={!this.state.profileView} onClick={this.goBack}>Back</button>
         <form id="search">
           <input type="text" placeholder="Search User" onChange={this.onTextChange}/>
         </form>
         <button onClick={this.onSearch} disabled={this.state.searchBar === null}>Search</button>
-        <Login onClick={this.onClick}/>
-        <Logout onClick={this.onLogout}/>
         {this.state.profileView === true && (
           
           <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView}/>
@@ -117,7 +117,7 @@ class App extends React.Component {
           <Explore/>
         )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
-          <Upload />
+          <Upload authtoken={this.state.authtoken}/>
         </Rodal>
       </div>
     </ApolloProvider>

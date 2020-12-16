@@ -30,12 +30,18 @@ function getPostInfo(postId){
 }
 
 function getImage(postId){
-    return fetch(serverName + 'image/' + postId)
+    return fetch(serverName + 'image/' + parseInt(postId))
         .then(res => res.blob()).then(data => data)
 }
 
+function getComments(postid){
+    return fetch(serverName +'comments/' + postid)
+        .then(res => res.json())
+        .then(res => res.data)
+}
+
 function getAll(postid, userid){
-    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid)])
+    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid), getComments(postid)])
 }
 
 class Post extends React.Component {
@@ -62,13 +68,13 @@ class Post extends React.Component {
         axios.get(serverName + 'post/' + this.state.postid)
             .then(res => {
                 //console.log("DSLKHJJFL: ",res.data.data.userid)
-                getAll(this.state.postid,res.data.data.userid)
-                    .then(([userinfo,postinfo,pic]) => {
+                getAll(this.state.postid,res.data.data.userid, this.state.postid)
+                    .then(([userinfo,postinfo,pic, commentinfo]) => {
                         //console.log("user", userinfo)
                         console.log("post", postinfo)
                         let tpic = URL.createObjectURL(pic)
                         //let apic = URL.createObjectURL(userinfo.avatar)
-                        //console.log("pic", userinfo.avatar)
+                        this.setState({comments: commentinfo})
                         this.setState({userpic:userinfo.avatar})
                         this.setState({name: userinfo.name})
                         this.setState({image:tpic})
@@ -123,11 +129,21 @@ class Post extends React.Component {
     }
 
     commentsRender = () =>{
-        return(
-            <div className="Post-comment">
-                {this.state.comments}
-            </div>
-        )
+        console.log("commentinfo: ", this.state.comments)
+        if(this.state.comments !== null){
+            return(
+                <div className="Post-comment">
+                    {this.state.comments.map(comment => 
+                    (<div className = "Comments">
+                        <strong>{comment.name}</strong> {comment.comment}
+                    </div>))}
+                </div>
+            )
+        }
+        else
+            return(
+                <div className = "Post-comment"></div>
+            )
     }
     click = () => {
         console.log("clicked post: ", this.state.userid)
