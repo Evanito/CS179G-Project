@@ -65,7 +65,7 @@ class Post extends React.Component {
             
             profileView: this.props.profileView,
         };
-        console.log("haha yes", this.state.profileView)
+        //console.log("haha yes", this.state.profileView)
         axios.get(serverName + 'post/' + this.state.postid)
             .then(res => {
                 //console.log("DSLKHJJFL: ",res.data.data.userid)
@@ -82,7 +82,7 @@ class Post extends React.Component {
                         this.setState({caption:postinfo.description})
                         this.setState({userid:postinfo.userid})
                         this.setState({postid:postinfo.postid})
-                        console.log("comment info",commentinfo)
+                        //console.log("comment info",commentinfo)
                     })
             })
 

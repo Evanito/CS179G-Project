@@ -40,7 +40,7 @@ class Profile extends React.Component {
     fetchData(){
         //get list of all post ids
         //console.log("auth: ", this.state.auth)
-        console.log("profile id ", this.state.userid)
+        //console.log("profile id ", this.state.userid)
         this.setState({post:[]})
         axios.get(serverName +'userfeed/' + this.state.userid,{
             params:{
@@ -48,12 +48,12 @@ class Profile extends React.Component {
             },
         })
         .then(res => {
-            console.log("Profile ", res)
+            //console.log("Profile ", res)
             this.setState({requests: res.data.data.map(Number)})
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
-            console.log("postid: ", this.state.requests)
+            //console.log("postid: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 let temp = {
                     postid: this.state.requests[i],
