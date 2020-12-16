@@ -30,6 +30,7 @@ class Profile extends React.Component {
             profileView: this.props.profileView,
             image: null,
             userpic: this.props.userpic,
+            bio:"",
             
             followText: "Follow",
             followed: false,
@@ -94,6 +95,15 @@ class Profile extends React.Component {
                 this.setState({followText: "Follow"})
             }
         })
+        fetch(serverName + 'user?id=' + this.state.userid)
+        .then((res) => res.json())
+        .then(data => {
+            console.log("profile dfjadsfh ", data.data[0])
+            this.setState({image:data.data[0].avatar})
+            this.setState({name:data.data[0].name})
+            this.setState({bio:data.data[0].bio})
+        })
+
     }
 
     onFollow = () => {
@@ -147,10 +157,10 @@ class Profile extends React.Component {
                 <header>
                     <div className="User goes here"></div>
                     <div className="Post-user-avatar">
-                        <img src={this.state.userpic} />
+                        <img src={this.state.image} />
                     </div>
                     <div className="Post-user-nickname">
-                    <strong>{this.state.name}'s Profile</strong>
+                        <strong>{this.state.name}'s Profile: </strong> {this.state.bio}
                     </div>
                 </header>
                 
