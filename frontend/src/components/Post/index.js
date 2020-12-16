@@ -60,8 +60,11 @@ class Post extends React.Component {
             userpic: null,
             caption: null,
             comments: null,
+
             likes: 100,
+            likedText: "",
             liked: false,
+
             postid: this.props.postid,
             userid: this.props.userid,
             newComment: null,
@@ -88,13 +91,30 @@ class Post extends React.Component {
                         this.setState({caption:postinfo.description})
                         this.setState({userid:postinfo.userid})
                         this.setState({postid:postinfo.postid})
-<<<<<<< HEAD
+
                         this.setState({likes: likesinfo})
                         console.log("comment info",commentinfo)
-=======
+
                         //console.log("comment info",commentinfo)
->>>>>>> 2a835ec8f4a952568aa1d0dba13ab295cf0218d4
+
                     })
+            })
+            fetch(serverName+'liked?postid='+this.state.postid,{
+                method:'get',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res =>{
+                console.log("like check", res)
+                this.setState({liked: res.liked})
+                if(res.liked){
+                    this.setState({likedText: "Unlike"})
+                }
+                else{
+                    this.setState({likedText: "Like"})
+                }
             })
 
     }
@@ -153,16 +173,23 @@ class Post extends React.Component {
             this.setState({liked: false})
 
             // TODO: Check if already liked.
-            /* fetch(serverName + 'liked?postid=' + this.state.postid, {
-                method:'post',
+            /*fetch(serverName+'liked?postid='+this.state.postid,{
+                method:'get',
                 headers: new Headers({
                     'Authorization': 'Bearer ' + this.state.auth
                 })
             })
             .then(res => res.json())
-            .then(res => {
-                console.log("like return",res)
-            }) */
+            .then(res =>{
+                console.log("like check", res)
+                this.setState({liked: res.liked})
+                if(res.liked){
+                    this.setState({likedText: "Unlike"})
+                }
+                else{
+                    this.setState({likedText: "Like"})
+                }
+            })*/
 
             console.log("fetching for unlike", this.state.auth)
             fetch(serverName + 'unlike?postid=' + this.state.postid, {
@@ -182,16 +209,23 @@ class Post extends React.Component {
             this.setState({liked: true})
 
             // TODO: Check if already liked.
-            /* fetch(serverName + 'liked?postid=' + this.state.postid, {
-                method:'post',
+            /*fetch(serverName+'liked?postid='+this.state.postid,{
+                method:'get',
                 headers: new Headers({
                     'Authorization': 'Bearer ' + this.state.auth
                 })
             })
             .then(res => res.json())
-            .then(res => {
-                console.log("like return",res)
-            }) */
+            .then(res =>{
+                console.log("like check", res)
+                this.setState({liked: res.liked})
+                if(res.liked){
+                    this.setState({likedText: "Unlike"})
+                }
+                else{
+                    this.setState({likedText: "Like"})
+                }
+            })*/
 
             console.log("fetching for like", this.state.auth)
             fetch(serverName + 'like?postid=' + this.state.postid, {
@@ -251,7 +285,7 @@ class Post extends React.Component {
                 </div>
 
                 <div className="Post-likes">
-                <button onClick={this.onLike} >Like</button>
+                <button onClick={this.onLike} >{this.state.likedText}</button>
                 <strong>  {this.state.likes}</strong>
                 </div>
 
