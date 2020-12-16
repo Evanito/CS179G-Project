@@ -174,7 +174,7 @@ class Post extends React.Component {
             this.setState({liked: false})
             this.setState({likedText: "Like"})
 
-                        console.log("fetching for unlike", this.state.auth)
+            console.log("fetching for unlike", this.state.auth)
             fetch(serverName + 'unlike?postid=' + this.state.postid, {
                 method:'post',
                 headers: new Headers({

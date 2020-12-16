@@ -82,15 +82,15 @@ class Profile extends React.Component {
                 this.setState({followText: "Follow"})
             }
         })
-
-
     }
 
     onFollow = () => {
         if (this.state.followed == false) {
+            this.setState({followed: true})
+            this.setState({followedText: "Unfollow"})
             //console.log("follow auth", this.state.auth)
             
-            this.setState({followed: false})
+            // this.setState({followed: false})
             fetch(serverName + 'follow?targetid=' + this.state.userid, {
                 method:'post',
                 headers: new Headers({
@@ -104,7 +104,9 @@ class Profile extends React.Component {
         }
 
         else {
-            this.setState({followed: true})
+            // this.setState({followed: true})
+            this.setState({followed: false})
+            this.setState({followedText: "Follow"})
             fetch(serverName + 'unfollow?targetid=' + this.state.userid, {
                 method:'post',
                 headers: new Headers({
