@@ -78,6 +78,7 @@ class App extends React.Component {
 
   onLogout = () => {
     this.setState({authtoken:null})
+    this.setState({exploreView: true})
   }
 
   viewProfile = (id) => {
@@ -146,7 +147,7 @@ class App extends React.Component {
         {this.state.authtoken !== null && this.state.profileView === false && this.state.exploreView === false && this.state.searchView === false &&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
         )}
-        {this.state.authtoken === null || (this.state.profileView === false && this.state.searchView === false) && this.state.exploreView === true &&(
+        {(this.state.profileView === false && this.state.searchView === false && this.state.exploreView === true) &&(
           <Explore onClick={this.viewProfile} auth={this.state.authtoken}/>
         )}
       {this.state.searchView === true && this.state.profileView === false && this.state.exploreView === false &&(
