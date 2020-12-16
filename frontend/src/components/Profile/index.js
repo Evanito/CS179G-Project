@@ -3,6 +3,18 @@ import React, { } from "react";
 import axios from 'axios'
 import Post from "../Post"
 let serverName = "http://evpi.nsupdate.info:14200/";
+
+function getUserInfo(userId){
+    //console.log("USER: " + userId)
+    return fetch(serverName + 'user?id=' + userId)
+        .then((res) => res.json())
+        .then(data => data.data[0])
+}
+
+function getAll(postid, userid){
+    return Promise.all([getUserInfo(userid)])
+}
+
 class Profile extends React.Component {
     constructor(props){
         super(props)
@@ -17,7 +29,7 @@ class Profile extends React.Component {
             globalUser: this.props.globalUser,
             profileView: this.props.profileView,
             image: null,
-            userpic: null,
+            userpic: this.props.userpic,
             
             followText: "Follow",
             followed: false,
@@ -132,6 +144,16 @@ class Profile extends React.Component {
     render(){
         return(
             <article>
+                <header>
+                    <div className="User goes here"></div>
+                    <div className="Post-user-avatar">
+                        <img src={this.state.userpic} />
+                    </div>
+                    <div className="Post-user-nickname">
+                    <strong>{this.state.name}'s Profile</strong>
+                    </div>
+                </header>
+                
                 <div>
                 <button onClick={this.onFollow} >{this.state.followText}</button>
                 </div>
