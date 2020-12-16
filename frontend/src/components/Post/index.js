@@ -40,8 +40,14 @@ function getComments(postid){
         .then(res => res.data)
 }
 
+function getLikes(postid){
+    return fetch(serverName + 'post/' + postid)
+        .then(res => res.json())
+        .then(data => data.data.likes)
+}
+
 function getAll(postid, userid){
-    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid), getComments(postid)])
+    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid), getComments(postid), getLikes(postid)])
 }
 
 class Post extends React.Component {
@@ -54,7 +60,7 @@ class Post extends React.Component {
             userpic: null,
             caption: null,
             comments: null,
-            likes: 0,
+            likes: 100,
             liked: false,
             postid: this.props.postid,
             userid: this.props.userid,
@@ -69,8 +75,8 @@ class Post extends React.Component {
         axios.get(serverName + 'post/' + this.state.postid)
             .then(res => {
                 //console.log("DSLKHJJFL: ",res.data.data.userid)
-                getAll(this.state.postid,res.data.data.userid, this.state.postid)
-                    .then(([userinfo,postinfo,pic, commentinfo]) => {
+                getAll(this.state.postid,res.data.data.userid, this.state.postid, this.state.postid)
+                    .then(([userinfo,postinfo,pic, commentinfo, likesinfo]) => {
                         //console.log("user", userinfo)
                         //console.log("post", postinfo)
                         let tpic = URL.createObjectURL(pic)
@@ -82,6 +88,7 @@ class Post extends React.Component {
                         this.setState({caption:postinfo.description})
                         this.setState({userid:postinfo.userid})
                         this.setState({postid:postinfo.postid})
+                        this.setState({likes: likesinfo})
                         console.log("comment info",commentinfo)
                     })
             })
@@ -119,6 +126,8 @@ class Post extends React.Component {
                 'postid', parseInt(this.state.postid),
             )
             console.log("Comment form", form)
+
+            console.log("fetching for comment", this.state.auth)
             fetch(serverName + 'comment', {
                 method:'post',
                 body: form,
@@ -134,15 +143,66 @@ class Post extends React.Component {
     }
 
     onLike = () => {
+        console.log("onLike called", this.state.auth)
         if (this.state.liked == true) {
             this.setState({likes: this.state.likes - 1})
             this.setState({liked: false})
+
+            // TODO: Check if already liked.
+            /* fetch(serverName + 'liked?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("like return",res)
+            }) */
+
+            console.log("fetching for unlike", this.state.auth)
+            fetch(serverName + 'unlike?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("unlike return",res)
+            })
         }
 
         else {
             this.setState({likes: this.state.likes + 1})
             this.setState({liked: true})
+
+            // TODO: Check if already liked.
+            /* fetch(serverName + 'liked?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("like return",res)
+            }) */
+
+            console.log("fetching for like", this.state.auth)
+            fetch(serverName + 'like?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("like return",res)
+            })
         }
+
+        
     }
 
     commentsRender = () =>{
