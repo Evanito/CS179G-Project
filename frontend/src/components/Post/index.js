@@ -1,35 +1,131 @@
 import "./Post.css"
 import React, { } from "react";
 import axios from 'axios'
+import styled from 'styled-components'
 
 
 let serverName = "http://evpi.nsupdate.info:14200/";
+const Button = styled.button`
+  background-color: white;
+  color: black;
+  font-size: 14px;
+  font-weight: bold,
+  padding: 5px 25x;
+  border-radius: 0px;
+  margin: 0px 0px;
+  cursor: pointer;
+  border: none,
+`;
 
+function getUserInfo(userId){
+    //console.log("USER: " + userId)
+    return fetch(serverName + 'user?id=' + userId)
+        .then((res) => res.json())
+        .then(data => data.data[0])
+}
+
+function getPostInfo(postId){
+    return axios.get(serverName + 'post/' + postId)
+        .then(res => res.data.data)
+}
+
+function getImage(postId){
+    return fetch(serverName + 'image/' + parseInt(postId))
+        .then(res => res.blob()).then(data => data)
+}
+
+function getComments(postid){
+    return fetch(serverName +'comments/' + postid)
+        .then(res => res.json())
+        .then(res => res.data)
+}
+
+function getLikes(postid){
+    return fetch(serverName + 'post/' + postid)
+        .then(res => res.json())
+        .then(data => data.data.likes)
+}
+
+function getAll(postid, userid){
+    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid), getComments(postid), getLikes(postid)])
+}
 
 class Post extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            name: this.props.name,
+            name: null,
             globalUser: this.props.globalUser,
-            image: this.props.image,
+            image: null,
             userpic: null,
-            caption: this.props.caption,
-            comments: "",
+            caption: null,
+            comments: null,
+
+            likes: 100,
+            likedText: "",
+            liked: false,
+
             postid: this.props.postid,
             userid: this.props.userid,
             newComment: null,
+            header: this.props.header,
+            onClick: this.props.onClick,
+            auth: this.props.auth,
+            
+            profileView: this.props.profileView,
         };
-        /* getAll()
-            .then(([username, userImage]) => {
-                this.setState({name: username});
-                this.setState({image:URL.createObjectURL(userImage)})
-                console.log("name ",username)
-                console.log("Image ", userImage)
-            }) */
+        //console.log("haha yes", this.state.profileView)
+        axios.get(serverName + 'post/' + this.state.postid)
+            .then(res => {
+                //console.log("DSLKHJJFL: ",res.data.data.userid)
+                getAll(this.state.postid,res.data.data.userid, this.state.postid, this.state.postid)
+                    .then(([userinfo,postinfo,pic, commentinfo, likesinfo]) => {
+                        //console.log("user", userinfo)
+                        //console.log("post", postinfo)
+                        let tpic = URL.createObjectURL(pic)
+                        //let apic = URL.createObjectURL(userinfo.avatar)
+                        this.setState({comments: commentinfo})
+                        this.setState({userpic:userinfo.avatar})
+                        this.setState({name: userinfo.name})
+                        this.setState({image:tpic})
+                        this.setState({caption:postinfo.description})
+                        this.setState({userid:postinfo.userid})
+                        this.setState({postid:postinfo.postid})
+
+                        this.setState({likes: likesinfo})
+                        console.log("comment info",commentinfo)
+
+                        //console.log("comment info",commentinfo)
+
+                    })
+            })
+            fetch(serverName+'liked?postid='+this.state.postid,{
+                method:'get',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res =>{
+                console.log("like check", res)
+                this.setState({liked: res.liked})
+                if(res.liked){
+                    this.setState({likedText: "Unlike"})
+                }
+                else{
+                    this.setState({likedText: "Like"})
+                }
+            })
+
     }
-    componentDidUpdate = () =>{
-        //this.commentsRender()
+    componentDidUpdate (prevProps) {
+        if(this.props.profileView !== prevProps.profileView){
+            this.setState({auth: this.props.profileView})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            console.log("Update profileView")
+            // this.fetchData(this.props.profileView)
+        }
     }
     onTextChange = event =>{
         //console.log("on change", event.target.value)
@@ -38,26 +134,121 @@ class Post extends React.Component {
     onComment = () => {
         if(this.state.newComment){
             document.getElementById("comm").reset()
-            console.log("Comment", this.state.newComment)
-            this.setState({comments: this.state.comments + "\n" + this.state.globalUser +': ' + this.state.newComment})
+            //console.log("Comment", this.state.newComment)
+            let temp = {
+                "comment": this.state.newComment,
+                "name": this.state.name,
+            }
+            this.setState({comments: this.state.comments.concat(temp)})
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
-            const comm = {
-                data: this.state.newComment
-            }
-            axios.post(serverName + 'endpoint', {comm})
-                .then(res => {
-                    console.log(res)
+            let form = new FormData()
+            form.append(
+                'data', this.state.newComment,
+            )
+            form.append(
+                'postid', parseInt(this.state.postid),
+            )
+            console.log("Comment form", form)
+
+            console.log("fetching for comment", this.state.auth)
+            fetch(serverName + 'comment', {
+                method:'post',
+                body: form,
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
                 })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("comment return",res)
+            })
         }
     }
-    commentsRender = () =>{
-        return(
-            <div className="Post-comment">
-                {this.state.comments}
-            </div>
-        )
+
+    onLike = () => {
+
+        console.log("onLike called", this.state.auth)
+        if (this.state.liked == true) {
+            this.setState({likes: this.state.likes - 1})
+            this.setState({liked: false})
+            this.setState({likedText: "Like"})
+
+            console.log("fetching for unlike", this.state.auth)
+            fetch(serverName + 'unlike?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("unlike return",res)
+            })
+        }
+
+        else {
+            this.setState({likes: this.state.likes + 1})
+            this.setState({liked: true})
+            this.setState({likedText: "Unlike"})
+
+            // TODO: Check if already liked.
+            /*fetch(serverName+'liked?postid='+this.state.postid,{
+                method:'get',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res =>{
+                console.log("like check", res)
+                this.setState({liked: res.liked})
+                if(res.liked){
+                    this.setState({likedText: "Unlike"})
+                }
+                else{
+                    this.setState({likedText: "Like"})
+                }
+            })*/
+
+            console.log("fetching for like", this.state.auth)
+            fetch(serverName + 'like?postid=' + this.state.postid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("like return",res)
+            })
+        }
+
+        
     }
+
+    commentsRender = () =>{
+        //console.log("commentinfo: ", this.state.comments)
+        if(this.state.comments !== null){
+            return(
+                <div className="Post-comment">
+                    {this.state.comments.map(comment => 
+                    (<div className = "Comments">
+                        <strong>{comment.name}</strong> {comment.comment}
+                    </div>))}
+                </div>
+            )
+        }
+        else
+            return(
+                <div className = "Post-comment"></div>
+            )
+    }
+    click = () => {
+        console.log("clicked post: ", this.state.userid)
+        this.props.onClick(this.state.userid)
+    }
+
     render(){
         return(
             <article className="Post" ref="Post">
@@ -67,7 +258,7 @@ class Post extends React.Component {
                         <img src={this.state.userpic} />
                     </div>
                     <div className="Post-user-nickname">
-                        <span>{this.state.name}</span>
+                        <button onClick={this.click} disabled={this.state.profileView}>{this.state.name}</button>
                     </div>
                     </div>
                 </header>
@@ -76,6 +267,12 @@ class Post extends React.Component {
                     <img src={this.state.image} />
                     </div>
                 </div>
+
+                <div className="Post-likes">
+                <button onClick={this.onLike} >{this.state.likedText}</button>
+                <strong>  {this.state.likes}</strong>
+                </div>
+
                 <div className="Post-caption">
                     <strong>{this.state.name}</strong> {this.state.caption}
                 </div>
