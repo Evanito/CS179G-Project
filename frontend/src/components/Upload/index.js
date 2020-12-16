@@ -44,7 +44,7 @@ export default class Upload extends React.Component{
             this.setState({upload:false})
             //console.log("state",this.state.targetFile)
             //console.log("caption", this.state.caption);
-            //console.log("upload token", this.state.authtoken)
+            console.log("upload token", this.state.authtoken)
             document.getElementById("cap").reset()
             //DO POST REQUEST HERE
             fetch(serverName + 'upload',{
@@ -63,12 +63,12 @@ export default class Upload extends React.Component{
             this.setState({targetFile:null})
         }
     }
-    static getDerivedStateFromProps(props, state) {
-        //console.log("getDerivedStateFromProps");
+    /* static getDerivedStateFromProps(props, state) {
+        console.log("getDerivedStateFromProps", props.authtoken);
         return {
           authtoken: props.authtoken,
         };
-      }
+      } */
     componentDidUpdate(prevProps){
         if(this.props.authtoken !== prevProps.authtoken){
             this.setState({authtoken: this.props.authtoken})

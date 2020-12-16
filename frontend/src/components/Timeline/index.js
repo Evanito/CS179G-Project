@@ -40,8 +40,10 @@ class Timeline extends React.Component {
         })
         .then(res => res.json())
         .then(res => {
-            //console.log("timeline return: ", res)
-            this.setState({requests: res.data.map(Number)})
+            console.log("timeline return: ", res)
+            if(res.length > 0){
+                this.setState({requests: res.data.map(Number)})
+            }
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image

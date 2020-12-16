@@ -56,7 +56,7 @@ class App extends React.Component {
     //this.setState({header: new Headers({'Authorization': 'Bearer ' + id})})
     //console.log("onclick")
     this.setState({authtoken: id})
-    //console.log("authApp.js",this.state.authtoken)
+    console.log("authApp.js",this.state.authtoken)
     fetch(serverName+"authenticate", {
       method: 'post',
       headers: new Headers({
