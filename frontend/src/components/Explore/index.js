@@ -34,13 +34,13 @@ class Explore extends React.Component {
             postid: null */
             //this will contain ready to be mapped post components
         }
-        console.log("Constructor")
+        console.log("Constructor explore")
         this.fetchData()
     }
     fetchData(){
         //get list of all post ids
         //console.log("auth: ", this.state.auth)
-        console.log("profile id ", this.state.userid)
+        //console.log("profile id ", this.state.userid)
         this.setState({post:[]})
         axios.get(serverName +'explore',{
             params:{
@@ -78,6 +78,15 @@ class Explore extends React.Component {
         }
     }
 
+    componentDidUpdate (prevProps) {
+        if(this.props.auth !== prevProps.auth){
+            this.setState({auth: this.props.auth})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            //console.log("Update auth explore")
+        }
+    }
+
     render(){
         return(
             <article>
@@ -86,7 +95,7 @@ class Explore extends React.Component {
                 <strong>  {this.state.follows}</strong>
                 </div>
                 <div className="Post">
-                    {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} profileView={this.state.profileView}onClick={this.props.onClick}/>)}
+                    {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} profileView={this.state.profileView}onClick={this.props.onClick} auth={this.state.auth}/>)}
                 </div>
             </article>
         )

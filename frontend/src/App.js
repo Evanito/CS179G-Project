@@ -56,7 +56,7 @@ class App extends React.Component {
     //this.setState({header: new Headers({'Authorization': 'Bearer ' + id})})
     //console.log("onclick")
     this.setState({authtoken: id})
-    console.log("authApp.js",this.state.authtoken)
+    //console.log("authApp.js",this.state.authtoken)
     fetch(serverName+"authenticate", {
       method: 'post',
       headers: new Headers({
@@ -115,7 +115,7 @@ class App extends React.Component {
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
         )}
         {this.state.authtoken === null && this.state.profileView === false &&(
-          <Explore onClick={this.viewProfile}/>
+          <Explore onClick={this.viewProfile} auth={this.state.authtoken}/>
         )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
           <Upload authtoken={this.state.authtoken}/>

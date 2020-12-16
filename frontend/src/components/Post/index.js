@@ -82,7 +82,7 @@ class Post extends React.Component {
                         this.setState({caption:postinfo.description})
                         this.setState({userid:postinfo.userid})
                         this.setState({postid:postinfo.postid})
-                        //console.log("Feed test", userinfo)
+                        console.log("comment info",commentinfo)
                     })
             })
 
@@ -112,19 +112,24 @@ class Post extends React.Component {
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
             let form = new FormData()
-            form = {
-                "data": this.state.newComment
-            }
-            fetch(serverName + '/comment', {
+            form.append(
+                'data', this.state.newComment,
+            )
+            form.append(
+                'postid', parseInt(this.state.postid),
+            )
+            console.log("Comment form", form)
+            fetch(serverName + 'comment', {
                 method:'post',
                 body: form,
                 headers: new Headers({
                     'Authorization': 'Bearer ' + this.state.auth
                 })
             })
-                .then(res => {
-                    console.log(res)
-                })
+            .then(res => res.json())
+            .then(res => {
+                console.log("comment return",res)
+            })
         }
     }
 

@@ -41,7 +41,7 @@ class Timeline extends React.Component {
         .then(res => res.json())
         .then(res => {
             console.log("timeline return: ", res)
-            if(res.length > 0){
+            if(res.data.length > 0){
                 this.setState({requests: res.data.map(Number)})
             }
             //iterate through all post ids to get relevant data
@@ -51,6 +51,7 @@ class Timeline extends React.Component {
                 let temp = {
                     postid: this.state.requests[i],
                     globalUser: this.state.globalUser,
+                    authtoken: this.state.auth,
                 }
                 let updateFeed = this.state.post.concat(temp)
                 this.setState({post:updateFeed})        
@@ -80,7 +81,7 @@ class Timeline extends React.Component {
     render(){
         return(
             <div className="Post">
-                {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick} auth={this.state.auth}/>)}
+                {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} onClick={this.props.onClick} auth={post.authtoken}/>)}
             </div>
         )
     }
