@@ -19,8 +19,8 @@ class Profile extends React.Component {
             image: null,
             userpic: null,
             
-            follows: 0,
-            followed: true,
+            followText: "",
+            followed: false,
 
             requests: [], //list of all postid to fetch from the server
             post: [],
@@ -35,12 +35,14 @@ class Profile extends React.Component {
             //this will contain ready to be mapped post components
         }
         console.log("Constructor")
-        this.fetchData()
+        if(this.state.auth !== null){
+            this.fetchData()
+        }
     }
     fetchData(){
         //get list of all post ids
-        //console.log("auth: ", this.state.auth)
-        console.log("profile id ", this.state.userid)
+        //console.log("auth: profile", this.props.auth)
+        //console.log("profile id ", this.state.userid)
         this.setState({post:[]})
         axios.get(serverName +'userfeed/' + this.state.userid,{
             params:{
@@ -48,12 +50,12 @@ class Profile extends React.Component {
             },
         })
         .then(res => {
-            console.log("Profile ", res)
+            //console.log("Profile ", res)
             this.setState({requests: res.data.data.map(Number)})
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
-            console.log("postid: ", this.state.requests)
+            //console.log("postid: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 let temp = {
                     postid: this.state.requests[i],
@@ -63,18 +65,65 @@ class Profile extends React.Component {
                 this.setState({post:updateFeed})        
             }
         })
+        fetch(serverName+'followed?targetid='+this.state.userid,{
+            method:'get',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + this.state.auth
+            })
+        })
+        .then(res => res.json())
+        .then(res =>{
+            console.log("follow check", res)
+            this.setState({followed: res.followed})
+            if(res.followed){
+                this.setState({followText: "Unfollow"})
+            }
+            else{
+                this.setState({followText: "Follow"})
+            }
+        })
+
 
     }
 
     onFollow = () => {
-        if (this.state.followed == true) {
-            this.setState({follows: this.state.follows + 1})
+        if (this.state.followed == false) {
+            //console.log("follow auth", this.state.auth)
+            
             this.setState({followed: false})
+            fetch(serverName + 'follow?targetid=' + this.state.userid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("follow return",res)
+            })
         }
 
         else {
-            this.setState({follows: this.state.follows - 1})
             this.setState({followed: true})
+            fetch(serverName + 'unfollow?targetid=' + this.state.userid, {
+                method:'post',
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("follow return",res)
+            })
+        }
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.auth !== prevProps.auth){
+            this.setState({auth: this.props.auth})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            console.log("Update auth follow",this.props.auth)
         }
     }
 
@@ -82,8 +131,7 @@ class Profile extends React.Component {
         return(
             <article>
                 <div>
-                <button onClick={this.onFollow} >Follow</button>
-                <strong>  {this.state.follows}</strong>
+                <button onClick={this.onFollow} >{this.state.followText}</button>
                 </div>
                 <div className="Post">
                     {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} profileView={this.state.profileView}onClick={this.props.onClick} auth={this.state.auth}/>)}

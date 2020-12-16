@@ -91,8 +91,6 @@ class Explore extends React.Component {
         return(
             <article>
                 <div>
-                <button onClick={this.onFollow} >Follow</button>
-                <strong>  {this.state.follows}</strong>
                 </div>
                 <div className="Post">
                     {this.state.post.map(post => <Post postid={post.postid} globalUser={post.globalUser} profileView={this.state.profileView}onClick={this.props.onClick} auth={this.state.auth}/>)}
