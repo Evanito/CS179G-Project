@@ -71,7 +71,7 @@ class Post extends React.Component {
                 getAll(this.state.postid,res.data.data.userid, this.state.postid)
                     .then(([userinfo,postinfo,pic, commentinfo]) => {
                         //console.log("user", userinfo)
-                        console.log("post", postinfo)
+                        //console.log("post", postinfo)
                         let tpic = URL.createObjectURL(pic)
                         //let apic = URL.createObjectURL(userinfo.avatar)
                         this.setState({comments: commentinfo})
@@ -102,7 +102,7 @@ class Post extends React.Component {
     onComment = () => {
         if(this.state.newComment){
             document.getElementById("comm").reset()
-            console.log("Comment", this.state.newComment)
+            //console.log("Comment", this.state.newComment)
             this.setState({comments: this.state.comments + "\n" + this.state.globalUser +': ' + this.state.newComment})
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
@@ -129,7 +129,7 @@ class Post extends React.Component {
     }
 
     commentsRender = () =>{
-        console.log("commentinfo: ", this.state.comments)
+        //console.log("commentinfo: ", this.state.comments)
         if(this.state.comments !== null){
             return(
                 <div className="Post-comment">

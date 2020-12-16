@@ -54,7 +54,7 @@ class App extends React.Component {
   }
   onClick = (id) => {
     //this.setState({header: new Headers({'Authorization': 'Bearer ' + id})})
-    console.log("onclick")
+    //console.log("onclick")
     this.setState({authtoken: id})
     //console.log("authApp.js",this.state.authtoken)
     fetch(serverName+"authenticate", {
@@ -63,8 +63,10 @@ class App extends React.Component {
         'Authorization': 'Bearer ' + id
       })
     })
+    .then(res => res.json())
     .then(res => {
-      console.log(res)
+      //console.log("logged user: ",res)
+      this.setState({timelineUser: res.data})
     })
   }
 
@@ -107,14 +109,13 @@ class App extends React.Component {
         </form>
         <button onClick={this.onSearch} disabled={this.state.searchBar === null}>Search</button>
         {this.state.profileView === true && (
-          
-          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView}/>
+          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView} onClick={this.viewProfile}/>
         )}
         {this.state.authtoken !== null && this.state.profileView === false&&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
         )}
-        {this.state.authtoken === null &&(
-          <Explore/>
+        {this.state.authtoken === null && this.state.profileView === false &&(
+          <Explore onClick={this.viewProfile}/>
         )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
           <Upload authtoken={this.state.authtoken}/>

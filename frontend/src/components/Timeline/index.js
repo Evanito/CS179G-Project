@@ -24,7 +24,9 @@ class Timeline extends React.Component {
             //this will contain ready to be mapped post components
         }
         console.log("Constructor")
-        this.fetchData()
+        if(this.state.auth !== null){
+            this.fetchData()
+        }
     }
     fetchData(){
         //get list of all post ids
@@ -38,7 +40,7 @@ class Timeline extends React.Component {
         })
         .then(res => res.json())
         .then(res => {
-            console.log("timeline return: ", res)
+            //console.log("timeline return: ", res)
             this.setState({requests: res.data.map(Number)})
             //iterate through all post ids to get relevant data
             //need the following
@@ -62,7 +64,9 @@ class Timeline extends React.Component {
             //console.log("update auth: ", this.props.auth)
             //console.log("old auth: ", prevProps.auth)
             console.log("Update auth timeline")
-            this.fetchData()
+            if(this.props.auth !== null){
+                this.fetchData()
+            }
         }
         if(this.props.loggedUserid !== prevProps.loggedUserid){
             console.log("Update user timeline")
