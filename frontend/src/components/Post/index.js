@@ -30,12 +30,18 @@ function getPostInfo(postId){
 }
 
 function getImage(postId){
-    return fetch(serverName + 'image/' + postId)
+    return fetch(serverName + 'image/' + parseInt(postId))
         .then(res => res.blob()).then(data => data)
 }
 
+function getComments(postid){
+    return fetch(serverName +'comments/' + postid)
+        .then(res => res.json())
+        .then(res => res.data)
+}
+
 function getAll(postid, userid){
-    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid)])
+    return Promise.all([getUserInfo(userid),getPostInfo(postid), getImage(postid), getComments(postid)])
 }
 
 class Post extends React.Component {
@@ -55,31 +61,40 @@ class Post extends React.Component {
             newComment: null,
             header: this.props.header,
             onClick: this.props.onClick,
+            auth: this.props.auth,
+            
+            profileView: this.props.profileView,
         };
-        //console.log("sdlfjkhs ", this.state.onClick)
+        console.log("haha yes", this.state.profileView)
         axios.get(serverName + 'post/' + this.state.postid)
             .then(res => {
                 //console.log("DSLKHJJFL: ",res.data.data.userid)
-                getAll(this.state.postid,res.data.data.userid)
-                    .then(([userinfo,postinfo,pic]) => {
+                getAll(this.state.postid,res.data.data.userid, this.state.postid)
+                    .then(([userinfo,postinfo,pic, commentinfo]) => {
                         //console.log("user", userinfo)
-                        console.log("post", postinfo)
+                        //console.log("post", postinfo)
                         let tpic = URL.createObjectURL(pic)
                         //let apic = URL.createObjectURL(userinfo.avatar)
-                        //console.log("pic", userinfo.avatar)
+                        this.setState({comments: commentinfo})
                         this.setState({userpic:userinfo.avatar})
                         this.setState({name: userinfo.name})
                         this.setState({image:tpic})
                         this.setState({caption:postinfo.description})
                         this.setState({userid:postinfo.userid})
                         this.setState({postid:postinfo.postid})
-                        //console.log("Feed test", userinfo)
+                        console.log("comment info",commentinfo)
                     })
             })
 
     }
-    componentDidUpdate = () =>{
-        //this.commentsRender()
+    componentDidUpdate (prevProps) {
+        if(this.props.profileView !== prevProps.profileView){
+            this.setState({auth: this.props.profileView})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            console.log("Update profileView")
+            // this.fetchData(this.props.profileView)
+        }
     }
     onTextChange = event =>{
         //console.log("on change", event.target.value)
@@ -88,17 +103,33 @@ class Post extends React.Component {
     onComment = () => {
         if(this.state.newComment){
             document.getElementById("comm").reset()
-            console.log("Comment", this.state.newComment)
-            this.setState({comments: this.state.comments + "\n" + this.state.globalUser +': ' + this.state.newComment})
+            //console.log("Comment", this.state.newComment)
+            let temp = {
+                "comment": this.state.newComment,
+                "name": this.state.name,
+            }
+            this.setState({comments: this.state.comments.concat(temp)})
             this.setState({newComment: null})
             //PUT REQUEST GOES HERE
-            const comm = {
-                data: this.state.newComment
-            }
-            axios.post(serverName + 'endpoint', {comm})
-                .then(res => {
-                    console.log(res)
+            let form = new FormData()
+            form.append(
+                'data', this.state.newComment,
+            )
+            form.append(
+                'postid', parseInt(this.state.postid),
+            )
+            console.log("Comment form", form)
+            fetch(serverName + 'comment', {
+                method:'post',
+                body: form,
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.auth
                 })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("comment return",res)
+            })
         }
     }
 
@@ -115,11 +146,21 @@ class Post extends React.Component {
     }
 
     commentsRender = () =>{
-        return(
-            <div className="Post-comment">
-                {this.state.comments}
-            </div>
-        )
+        //console.log("commentinfo: ", this.state.comments)
+        if(this.state.comments !== null){
+            return(
+                <div className="Post-comment">
+                    {this.state.comments.map(comment => 
+                    (<div className = "Comments">
+                        <strong>{comment.name}</strong> {comment.comment}
+                    </div>))}
+                </div>
+            )
+        }
+        else
+            return(
+                <div className = "Post-comment"></div>
+            )
     }
     click = () => {
         console.log("clicked post: ", this.state.userid)
@@ -135,7 +176,7 @@ class Post extends React.Component {
                         <img src={this.state.userpic} />
                     </div>
                     <div className="Post-user-nickname">
-                        <button onClick={this.click}>{this.state.name}</button>
+                        <button onClick={this.click} disabled={this.state.profileView}>{this.state.name}</button>
                     </div>
                     </div>
                 </header>

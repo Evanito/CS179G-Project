@@ -3,7 +3,7 @@ import React, { } from "react";
 import axios from 'axios'
 import Post from "../Post"
 let serverName = "http://evpi.nsupdate.info:14200/";
-class Profile extends React.Component {
+class Explore extends React.Component {
     constructor(props){
         super(props)
         this.state = {
@@ -34,15 +34,15 @@ class Profile extends React.Component {
             postid: null */
             //this will contain ready to be mapped post components
         }
-        console.log("Constructor")
+        console.log("Constructor explore")
         this.fetchData()
     }
     fetchData(){
         //get list of all post ids
         //console.log("auth: ", this.state.auth)
-        console.log("profile id ", this.state.userid)
+        //console.log("profile id ", this.state.userid)
         this.setState({post:[]})
-        axios.get(serverName +'userfeed/' + this.state.userid,{
+        axios.get(serverName +'explore',{
             params:{
                 page: this.state.index,
             },
@@ -53,7 +53,7 @@ class Profile extends React.Component {
             //iterate through all post ids to get relevant data
             //need the following
             //username, caption, userid, postid,and image
-            console.log("postid: ", this.state.requests)
+            //console.log("postid: ", this.state.requests)
             for(let i = 0; i < this.state.requests.length; i++){
                 let temp = {
                     postid: this.state.requests[i],
@@ -78,6 +78,15 @@ class Profile extends React.Component {
         }
     }
 
+    componentDidUpdate (prevProps) {
+        if(this.props.auth !== prevProps.auth){
+            this.setState({auth: this.props.auth})
+            //console.log("update auth: ", this.props.auth)
+            //console.log("old auth: ", prevProps.auth)
+            //console.log("Update auth explore")
+        }
+    }
+
     render(){
         return(
             <article>
@@ -94,4 +103,4 @@ class Profile extends React.Component {
     
 
 }
-export default Profile
+export default Explore

@@ -11,13 +11,18 @@ const Input = (props) => (
     />
   )
 export default class Upload extends React.Component{
-    state = {
-        preview: null,
-        targetFile: null,
-        caption: null,
+    constructor(props){
+        super(props)
+        this.state = {
+            preview: null,
+            targetFile: null,
+            caption: null,
+            authtoken: this.props.authtoken,
+        }
+        //console.log("upload auth", this.state.authtoken)
     }
     onFileChange = event =>{
-        console.log("on change", event.target.name)
+        //console.log("on change", event.target.name)
         this.setState({targetFile: event.target.files[0]})
         const objUrl = URL.createObjectURL(event.target.files[0])
         this.setState({preview: objUrl})
@@ -31,23 +36,45 @@ export default class Upload extends React.Component{
         if(this.state.targetFile){
             let form = new FormData()
             form.append(
-                'image', this.state.targetFile,
+                'file', this.state.targetFile,
             )
             form.append(
-                this.state.caption
+                'caption',this.state.caption
             )
             this.setState({upload:false})
-            console.log("state",this.state.targetFile)
-            console.log("caption", this.state.caption);
+            //console.log("state",this.state.targetFile)
+            //console.log("caption", this.state.caption);
+            console.log("upload token", this.state.authtoken)
             document.getElementById("cap").reset()
             //DO POST REQUEST HERE
-            axios.post(serverName + '/upload')
-            .then(res => {
-                console.log(res)
-                //get the post id form here
+            fetch(serverName + 'upload',{
+                method: 'post',
+                body: form,
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + this.state.authtoken
+                })
             })
+                .then(res => res.json())
+                .then(res => {
+                    console.log("upload",res)
+                    //get the post id form here
+                })
             this.setState({preview:null})
             this.setState({targetFile:null})
+        }
+    }
+    /* static getDerivedStateFromProps(props, state) {
+        console.log("getDerivedStateFromProps", props.authtoken);
+        return {
+          authtoken: props.authtoken,
+        };
+      } */
+    componentDidUpdate(prevProps){
+        if(this.props.authtoken !== prevProps.authtoken){
+            this.setState({authtoken: this.props.authtoken})
+            //console.log("update authtoken: ", this.props.authtoken)
+            //console.log("old authtoken: ", prevProps.authtoken)
+            //console.log("Update authtoken UPLOAD", this.state.authtoken)
         }
     }
     render(){

@@ -12,6 +12,7 @@ import Upload from './components/Upload';
 import Profile from './components/Profile';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
+import Explore from './components/Explore';
 
 let serverName = "http://evpi.nsupdate.info:14200/";
 let tempUser = 1;
@@ -40,6 +41,9 @@ class App extends React.Component {
     profileUser: -1,
     profileView: false,
     searchBar: null,
+
+    // Added by Matt.
+    uploadCheck: false,
   };
 
   handleClick = () => {
@@ -50,7 +54,7 @@ class App extends React.Component {
   }
   onClick = (id) => {
     //this.setState({header: new Headers({'Authorization': 'Bearer ' + id})})
-    console.log("onclick")
+    //console.log("onclick")
     this.setState({authtoken: id})
     //console.log("authApp.js",this.state.authtoken)
     fetch(serverName+"authenticate", {
@@ -59,8 +63,10 @@ class App extends React.Component {
         'Authorization': 'Bearer ' + id
       })
     })
+    .then(res => res.json())
     .then(res => {
-      console.log(res)
+      //console.log("logged user: ",res)
+      this.setState({timelineUser: res.data})
     })
   }
 
@@ -83,28 +89,36 @@ class App extends React.Component {
     //do search
   }
 
+  uploadCheck = () =>{
+    // Check if login matches profile.
+
+  }
+
   render() {
     //console.log(this.state.upload)
     return (
     <ApolloProvider client={client}>
       <div className="App">
         <Header/>
-        <button  onClick={() =>  this.handleClick()}>Upload</button>
+        <Login onClick={this.onClick}/>
+        <Logout onClick={this.onLogout}/>
+        <button  onClick={() =>  this.handleClick()} disabled={this.state.profileView}>Upload</button>
         <button disabled={!this.state.profileView} onClick={this.goBack}>Back</button>
         <form id="search">
           <input type="text" placeholder="Search User" onChange={this.onTextChange}/>
         </form>
         <button onClick={this.onSearch} disabled={this.state.searchBar === null}>Search</button>
-        <Login onClick={this.onClick}/>
-        <Logout onClick={this.onLogout} />
         {this.state.profileView === true && (
-          <Profile globalUser={"John"} userid={this.state.profileUser} />
+          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView} onClick={this.viewProfile}/>
         )}
         {this.state.authtoken !== null && this.state.profileView === false&&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
         )}
+        {this.state.authtoken === null && this.state.profileView === false &&(
+          <Explore onClick={this.viewProfile} auth={this.state.authtoken}/>
+        )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
-          <Upload />
+          <Upload authtoken={this.state.authtoken}/>
         </Rodal>
       </div>
     </ApolloProvider>
