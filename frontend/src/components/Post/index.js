@@ -167,31 +167,14 @@ class Post extends React.Component {
     }
 
     onLike = () => {
+
         console.log("onLike called", this.state.auth)
         if (this.state.liked == true) {
             this.setState({likes: this.state.likes - 1})
             this.setState({liked: false})
+            this.setState({likedText: "Like"})
 
-            // TODO: Check if already liked.
-            /*fetch(serverName+'liked?postid='+this.state.postid,{
-                method:'get',
-                headers: new Headers({
-                    'Authorization': 'Bearer ' + this.state.auth
-                })
-            })
-            .then(res => res.json())
-            .then(res =>{
-                console.log("like check", res)
-                this.setState({liked: res.liked})
-                if(res.liked){
-                    this.setState({likedText: "Unlike"})
-                }
-                else{
-                    this.setState({likedText: "Like"})
-                }
-            })*/
-
-            console.log("fetching for unlike", this.state.auth)
+                        console.log("fetching for unlike", this.state.auth)
             fetch(serverName + 'unlike?postid=' + this.state.postid, {
                 method:'post',
                 headers: new Headers({
@@ -207,6 +190,7 @@ class Post extends React.Component {
         else {
             this.setState({likes: this.state.likes + 1})
             this.setState({liked: true})
+            this.setState({likedText: "Unlike"})
 
             // TODO: Check if already liked.
             /*fetch(serverName+'liked?postid='+this.state.postid,{
