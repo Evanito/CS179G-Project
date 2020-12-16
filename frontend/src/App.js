@@ -49,6 +49,9 @@ class App extends React.Component {
     uploadCheck: false,
   };
 
+  componentDidMount(){
+    
+  }
   handleClick = () => {
     this.setState({upload: true})
   }
@@ -58,8 +61,8 @@ class App extends React.Component {
   onClick = (id) => {
     //this.setState({header: new Headers({'Authorization': 'Bearer ' + id})})
     //console.log("onclick")
-    this.setState({authtoken: id})
     //console.log("authApp.js",this.state.authtoken)
+    this.setState({authtoken: id})
     fetch(serverName+"authenticate", {
       method: 'post',
       headers: new Headers({
@@ -138,7 +141,7 @@ class App extends React.Component {
         <button onClick={this.onSearch} disabled={this.state.searchBar === null}>Search</button>
        
         {this.state.profileView === true && (
-          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView} onClick={this.viewProfile}/>
+          <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView} onClick={this.viewProfile} auth={this.state.authtoken}/>
         )}
         {this.state.authtoken !== null && this.state.profileView === false && this.state.exploreView === false && this.state.searchView === false &&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
