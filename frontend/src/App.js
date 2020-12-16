@@ -41,6 +41,7 @@ class App extends React.Component {
     profileUser: -1,
     profileView: false,
     searchBar: null,
+    exploreView: false,
 
     // Added by Matt.
     uploadCheck: false,
@@ -80,7 +81,12 @@ class App extends React.Component {
     this.setState({profileView: true})
   }
   goBack = () => {
-    this.setState({profileView:false})
+    if(this.state.profileView){
+      this.setState({profileView:false})
+    }
+    if(this.state.exploreView){
+      this.setState({exploreView:false})
+    }
   }
   onTextChange = event =>{
     this.setState({searchBar:event.target.value})
@@ -93,6 +99,9 @@ class App extends React.Component {
     // Check if login matches profile.
 
   }
+  onExplore = () => {
+    this.setState({exploreView: true})
+  }
 
   render() {
     //console.log(this.state.upload)
@@ -103,7 +112,8 @@ class App extends React.Component {
         <Login onClick={this.onClick}/>
         <Logout onClick={this.onLogout}/>
         <button  onClick={() =>  this.handleClick()} disabled={this.state.profileView}>Upload</button>
-        <button disabled={!this.state.profileView} onClick={this.goBack}>Back</button>
+        <button onClick={this.onExplore} disabled={this.state.exploreView}>Explore</button>
+        <button disabled={!this.state.profileView && !this.state.exploreView} onClick={this.goBack}>Back</button>
         <form id="search">
           <input type="text" placeholder="Search User" onChange={this.onTextChange}/>
         </form>
@@ -111,10 +121,10 @@ class App extends React.Component {
         {this.state.profileView === true && (
           <Profile globalUser={"John"} userid={this.state.profileUser} profileView = {this.state.profileView} onClick={this.viewProfile}/>
         )}
-        {this.state.authtoken !== null && this.state.profileView === false&&(
+        {this.state.authtoken !== null && this.state.profileView === false && this.state.exploreView === false &&(
           <Timeline globalUser={"John"} loggedUserid={this.state.timelineUser} auth={this.state.authtoken} onClick={this.viewProfile}/>
         )}
-        {this.state.authtoken === null && this.state.profileView === false &&(
+        {(this.state.authtoken === null && this.state.profileView === false ) || this.state.exploreView &&(
           <Explore onClick={this.viewProfile} auth={this.state.authtoken}/>
         )}
         <Rodal customStyles={customStyles} visible = {this.state.upload} onClose={this.hide.bind(this)}>
