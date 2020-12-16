@@ -21,11 +21,11 @@ i.Nav{
     display: block;
     background-position: 0px 0px;
     /*add the logo here*/
-    background-image: url(../../Images/IG_Name.png);
-    background-size: 172px 50px;
+    background-image: url(../../Images/InstantCam.png);
+    background-size: 270px 70px;
     background-repeat: no-repeat;
-    height: 50px;
-    width: 172px;
+    height: 70px;
+    width: 270px;
 }
 .Nav-upload{
     display: block;

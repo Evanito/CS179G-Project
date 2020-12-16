@@ -19,7 +19,7 @@ class Profile extends React.Component {
             image: null,
             userpic: null,
             
-            followText: "",
+            followText: "Follow",
             followed: false,
 
             requests: [], //list of all postid to fetch from the server

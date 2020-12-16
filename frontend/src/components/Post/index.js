@@ -62,7 +62,7 @@ class Post extends React.Component {
             comments: null,
 
             likes: 100,
-            likedText: "",
+            likedText: "Like",
             liked: false,
 
             postid: this.props.postid,
