@@ -171,11 +171,20 @@ def delete(postid):
     return jsonify(out)
 
 
-@app.route("/explore")
+#@app.route("/explore")
 def global_timeline():
     page = request.args.get('page') if request.args.get('page') else None
     count = int(request.args.get('count')) if request.args.get('count') else 20
     out = control.get_user_timeline(-1, page, count)
+    return jsonify(out)
+
+
+#@app.route("/popular")
+@app.route("/explore")
+def popular_timeline():
+    page = request.args.get('page') if request.args.get('page') else None
+    count = int(request.args.get('count')) if request.args.get('count') else 20
+    out = control.get_popular_timeline(page, count)
     return jsonify(out)
 
 
@@ -342,6 +351,17 @@ def search_user(name):
 @app.route("/search/tag/<hashtag>")
 def search_tag(hashtag):
     rows = control.search_tag(hashtag)
+    out = {
+        "data": rows,
+        "count": len(rows),
+        "time": time.time(),
+    }
+    return jsonify(out)
+
+
+@app.route("/search/email/<email>")
+def search_email(email):
+    rows = control.search_email(email)
     out = {
         "data": rows,
         "count": len(rows),

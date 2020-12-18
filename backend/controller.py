@@ -23,6 +23,16 @@ class CS179GController:
             return results
         return []
 
+    def search_email(self, query, count=1):
+        userresults = self.dbc.get_query_user_email(query)
+        results = []
+        if userresults is not None:
+            idlist = [entry.strip() for entry in list(userresults["USER_ID"].sort_values(ascending=False)[:count])]
+            for userid in idlist:
+                results.append(self.get_user_by_id(userid))
+            return results
+        return []
+
     def search_tag(self, query, count=10):
         postresults = self.dbc.get_query_in_caption(query.strip("# "))
         if postresults is not None:
@@ -70,6 +80,22 @@ class CS179GController:
         else:
             timelineDF = self.dbc.get_post_bulk()
         just_postid = timelineDF["POST_ID"].sort_values(ascending=False)
+        if page is not None:
+            start_index = just_postid.index(page)
+            just_postid = just_postid[start_index:]
+        rows = [entry.strip() for entry in list(just_postid[:count])]
+        out = {
+            "data": rows,
+            "count": len(rows),
+            "time": time.time(),
+        }
+        return out
+
+    def get_popular_timeline(self, page=None, count=20):
+        timelineDF = self.dbc.get_post_bulk()
+        timelineDF["LIKES"] = [(len(self.dbc.get_like_postid(postid)["POST_ID"]) if self.dbc.get_like_postid(postid) is not None else 0) for postid in timelineDF["POST_ID"]]
+        recent_timelineDF = timelineDF[timelineDF["POSTED_AT"].astype(float) > (time.time() - 86400)]
+        just_postid = recent_timelineDF.sort_values(by=["LIKES"], ascending=False)["POST_ID"]
         if page is not None:
             start_index = just_postid.index(page)
             just_postid = just_postid[start_index:]

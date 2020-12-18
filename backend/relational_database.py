@@ -29,6 +29,11 @@ class DBImp:
         result = self.do_query(query)
         return result
 
+    def get_query_user_email(self, email):
+        query = f"SELECT * FROM dbo.\"USERS\" WHERE EMAIL LIKE '{email}%'"
+        result = self.do_query(query)
+        return result
+
     def get_user_id(self, user_id):
         query = f'SELECT * FROM dbo."USERS" WHERE (USER_ID = {user_id})'
         result = self.do_query(query)
